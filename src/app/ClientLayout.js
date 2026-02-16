@@ -34,8 +34,8 @@ function Navbar() {
 
   return (
     <>
-      <nav className="fixed w-full z-[100] bg-white/95 backdrop-blur-md border-b border-slate-100 py-4 px-6 md:px-12 flex justify-between items-center transition-all">
-        <Link href="/#hero" className="relative z-[110]">
+      <nav className="fixed w-full z-100 bg-white/95 backdrop-blur-md border-b border-slate-100 py-4 px-6 md:px-12 flex justify-between items-center transition-all">
+        <Link href="/#hero" className="relative z-110">
           <Image src="/images/Logo cl.png" alt="Winfood Logo" width={140} height={45} className="object-contain w-30 md:w-37.5" priority />
         </Link>
 
@@ -47,7 +47,7 @@ function Navbar() {
           ))}
         </div>
 
-        <button className="lg:hidden relative z-[110] p-2 text-slate-800" onClick={() => setIsOpen(!isOpen)}>
+        <button className="lg:hidden relative z-110 p-2 text-slate-800" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </nav>
@@ -56,7 +56,7 @@ function Navbar() {
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center gap-8 lg:hidden pt-20"
+            className="fixed inset-0 bg-white z-100 flex flex-col items-center justify-center gap-8 lg:hidden pt-20"
           >
             {navLinks.map((link) => (
               <Link key={link.name} href={link.href} onClick={() => setIsOpen(false)} className="text-2xl font-bold text-slate-800 tracking-widest">

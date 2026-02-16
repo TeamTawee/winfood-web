@@ -27,7 +27,15 @@ export default function ProductDetail({ params }) {
             const docRef = doc(db, "products", id);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-                setItem({ id: docSnap.id, ...docSnap.data() });
+                // 🟢 1. ดึงข้อมูลออกมาเก็บใส่ตัวแปร data ก่อน เพื่อให้เรียกใช้ง่าย
+                const data = docSnap.data();
+                
+                setItem({ id: docSnap.id, ...data });
+
+                // 🟢 2. เพิ่มบรรทัดนี้เข้าไปครับ: สั่งเปลี่ยนชื่อ Tab ทันที
+                document.title = `${data.title} | Winfood Product`; 
+
+                // (ส่วนดึงสินค้าอื่นๆ เหมือนเดิม)
                 const q = query(collection(db, "products"), where("published", "==", true), limit(6)); 
                 const querySnapshot = await getDocs(q);
                 const others = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.id !== id); 
