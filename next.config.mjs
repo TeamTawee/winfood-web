@@ -1,14 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // เหลือแค่นี้พอครับ
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**', // อนุญาตทุกเว็บไซต์ในโลกที่เป็น https
+        hostname: '**', 
       },
       {
         protocol: 'http',
-        hostname: '**', // อนุญาตทุกเว็บไซต์ที่เป็น http
+        hostname: '**', 
       },
     ],
   },
