@@ -48,7 +48,8 @@ export default function RootLayout({ children }) {
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const navLinks = [
-    { name: "HOME", href: "/" },
+    // 🟢 แก้บรรทัดนี้: เปลี่ยนจาก "/" เป็น "/#hero"
+    { name: "HOME", href: "/#hero" }, 
     { name: "PRODUCTS", href: "/#products" },
     { name: "ABOUT US", href: "/about" },
     { name: "CONTACT", href: "#footer" },
@@ -57,7 +58,7 @@ function Navbar() {
   return (
     <>
       <nav className="fixed w-full z-100 bg-white/95 backdrop-blur-md border-b border-slate-100 py-4 px-6 md:px-12 flex justify-between items-center transition-all">
-        <Link href="/" className="relative z-110">
+        <Link href="/#hero" className="relative z-110">
           <Image src="/images/Logo cl.png" alt="Winfood Logo" width={140} height={45} className="object-contain w-30 md:w-37.5" priority />
         </Link>
 

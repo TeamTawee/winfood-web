@@ -54,7 +54,7 @@ export default function ProductDetail({ params }) {
         
         {/* 🟢 2. เพิ่มปุ่ม Back ตรงนี้ */}
         <div className="absolute top-6 left-6 z-20 flex gap-3">
-             <Link href="/" className="bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full text-white hover:bg-white hover:text-slate-900 transition-all shadow-lg">
+             <Link href="/#hero" className="bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full text-white hover:bg-white hover:text-slate-900 transition-all shadow-lg">
                 <Home size={20}/>
              </Link>
              <Link href="/#products" className="bg-white/10 backdrop-blur-md border border-white/20 pl-4 pr-6 py-3 rounded-full text-white text-sm font-bold flex gap-2 items-center hover:bg-white hover:text-slate-900 transition-all shadow-lg group">
