@@ -24,9 +24,21 @@ function ImageUploader({ label, currentImage, onImageUpload, folderName = "gener
 
     setIsUploading(true);
     try {
-      const fileName = `${Date.now()}_${file.name}`;
+      // 🟢 1. เรียกใช้ฟังก์ชันบีบอัดรูปก่อน
+      const compressedFile = await compressImage(file);
+      
+      const fileName = `${Date.now()}_${compressedFile.name}`; // ใช้ชื่อไฟล์ใหม่ (ที่เป็น .webp)
       const storageRef = ref(storage, `${folderName}/${fileName}`);
-      await uploadBytes(storageRef, file);
+
+      // 🟢 2. เพิ่ม Metadata เพื่อบอกให้ Cache ไว้นานๆ (1 ปี)
+      const metadata = {
+        cacheControl: 'public, max-age=31536000, immutable',
+        contentType: compressedFile.type,
+      };
+
+      // ส่งไฟล์ที่บีบอัดแล้ว + metadata ขึ้นไป
+      await uploadBytes(storageRef, compressedFile, metadata);
+      
       const downloadURL = await getDownloadURL(storageRef);
       onImageUpload(downloadURL);
     } catch (error) {
@@ -657,4 +669,50 @@ export default function AdminPage() {
       </div>
     </div>
   );
+}
+
+// 🟢 ฟังก์ชันช่วยบีบอัดรูปภาพ (แปลงเป็น WebP เพื่อรองรับพื้นหลังใส + ไฟล์เล็ก)
+const compressImage = (file) => {
+  return new Promise((resolve) => {
+    // ถ้าไม่ใช่รูปภาพ ให้คืนค่าไฟล์เดิมกลับไป
+    if (!file.type.startsWith('image/')) {
+        resolve(file);
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = document.createElement("img");
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 1200; // ความกว้างสูงสุด
+        const scaleSize = MAX_WIDTH / img.width;
+        
+        if (scaleSize < 1) {
+            canvas.width = MAX_WIDTH;
+            canvas.height = img.height * scaleSize;
+        } else {
+            canvas.width = img.width;
+            canvas.height = img.height;
+        }
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        // 🟢 ไฮไลท์: แปลงเป็น WebP (รองรับพื้นหลังใส) ที่คุณภาพ 80%
+        ctx.toBlob((blob) => {
+          // เปลี่ยนชื่อไฟล์ให้ลงท้ายด้วย .webp
+          const newName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+          
+          const newFile = new File([blob], newName, { 
+              type: "image/webp", 
+              lastModified: Date.now() 
+          });
+          resolve(newFile);
+        }, "image/webp", 0.8); 
+      }
+    }
+  })
 }
