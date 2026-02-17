@@ -671,7 +671,7 @@ export default function AdminPage() {
   );
 }
 
-// 🟢 ฟังก์ชันช่วยบีบอัดรูปภาพ (แปลงเป็น WebP เพื่อรองรับพื้นหลังใส + ไฟล์เล็ก)
+// 🟢 ฟังก์ชันช่วยบีบอัดรูปภาพ (เวอร์ชั่น Turbo แก้ไขแล้ว)
 const compressImage = (file) => {
   return new Promise((resolve) => {
     // ถ้าไม่ใช่รูปภาพ ให้คืนค่าไฟล์เดิมกลับไป
@@ -680,12 +680,12 @@ const compressImage = (file) => {
         return;
     }
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const img = document.createElement("img");
-      img.src = event.target.result;
-      img.onload = () => {
+    // 🚀 ใช้ createObjectURL แทน FileReader (เร็วกว่าและกินแรมน้อยกว่ามหาศาล)
+    const imgUrl = URL.createObjectURL(file);
+    const img = document.createElement("img");
+    img.src = imgUrl;
+    
+    img.onload = () => {
         const canvas = document.createElement("canvas");
         const MAX_WIDTH = 1200; // ความกว้างสูงสุด
         const scaleSize = MAX_WIDTH / img.width;
@@ -701,18 +701,30 @@ const compressImage = (file) => {
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         
-        // 🟢 ไฮไลท์: แปลงเป็น WebP (รองรับพื้นหลังใส) ที่คุณภาพ 80%
-        ctx.toBlob((blob) => {
-          // เปลี่ยนชื่อไฟล์ให้ลงท้ายด้วย .webp
+        // 🟢 แก้ไขตรงนี้: ต้องใช้ canvas.toBlob ไม่ใช่ ctx.toBlob
+        canvas.toBlob((blob) => {
+          // สร้างชื่อไฟล์ใหม่
           const newName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
           
           const newFile = new File([blob], newName, { 
               type: "image/webp", 
               lastModified: Date.now() 
           });
+          
+          // 🧹 คืนหน่วยความจำ
+          URL.revokeObjectURL(imgUrl);
+          
+          // Debug ดูขนาดไฟล์
+          console.log(`บีบอัดเสร็จ: ${file.size} -> ${newFile.size} bytes`);
+          
           resolve(newFile);
         }, "image/webp", 0.8); 
-      }
+    }
+    
+    img.onerror = () => {
+        // ถ้าไฟล์เสียหรืออ่านไม่ได้ ให้ส่งไฟล์เดิมไปแทน กันระบบพัง
+        URL.revokeObjectURL(imgUrl);
+        resolve(file); 
     }
   })
 }
