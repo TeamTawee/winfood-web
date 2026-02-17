@@ -137,7 +137,7 @@ function StatusSelector({ status, onChange }) {
 
 function LoadingOverlay() {
   return (
-    <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-[9999] flex items-center justify-center animate-in fade-in duration-200">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-9999 flex items-center justify-center animate-in fade-in duration-200">
       <div className="bg-white p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-3">
         <Loader2 className="animate-spin text-green-600" size={32} />
         <span className="text-sm font-bold text-slate-600">กำลังประมวลผล...</span>
@@ -447,7 +447,7 @@ export default function AdminPage() {
 
                                     <StatusSelector status={status} onChange={setStatus} />
                                     
-                                    <button onClick={handleProductSubmit} className="px-6 py-2 bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg hover:bg-green-700 hover:shadow-green-200 transition-all flex items-center gap-2 min-w-[120px] justify-center"><Save size={18}/> บันทึก</button>
+                                    <button onClick={handleProductSubmit} className="px-6 py-2 bg-green-600 text-white rounded-xl font-bold text-sm shadow-lg hover:bg-green-700 hover:shadow-green-200 transition-all flex items-center gap-2 min-w-30 justify-center"><Save size={18}/> บันทึก</button>
                                 </div>
                             </div>
 

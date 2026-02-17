@@ -1,5 +1,17 @@
+/* src/app/globals.css */
 @import "tailwindcss";
 
+/* 1. ส่วนการตั้งค่า Theme สำหรับ Tailwind v4 */
+@theme {
+  /* กำหนดให้ font-sans เรียกใช้ Prompt เป็นอันดับแรก ตามด้วย Inter */
+  --font-sans: var(--font-prompt), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  
+  /* รักษาสีเดิมของบริษัทไว้ */
+  --color-winfood-green: #16a34a;
+  --color-winfood-orange: #f97316;
+}
+
+/* 2. การตั้งค่าพื้นฐานของ HTML และ Body */
 html {
   scroll-behavior: smooth;
   overscroll-behavior-y: none; /* ป้องกันการ Reload เองเวลาดึงหน้าจอบน iOS */
@@ -8,23 +20,30 @@ html {
 :root {
   --background: #FFFFFF;
   --foreground: #1D1D1F; /* สีดำแบบ Apple */
-  --winfood-green: #16a34a;
-  --winfood-orange: #f97316;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+  /* บังคับใช้ฟอนต์ Prompt (ไทย) และ Inter (อังกฤษ) */
+  font-family: var(--font-prompt), var(--font-inter), sans-serif;
   -webkit-font-smoothing: antialiased;
-  -webkit-overflow-scrolling: touch; /* ทำให้การเลื่อนบน iOS ลื่นไหล */
+  -webkit-overflow-scrolling: touch; /* ทำให้การเลื่อนบน iOS ลื่นไหล (รักษาสมรรถนะเดิม) */
 }
 
-/* Custom Scrollbar แบบมินิมอล */
+/* 3. Custom Scrollbar แบบมินิมอล (รักษาของเดิมไว้) */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-thumb { background: #E2E2E2; border-radius: 10px; }
 
-/* GPU Acceleration สำหรับพวก Backdrop Blur เพื่อความลื่น */
+/* 4. GPU Acceleration (อันนี้สำคัญมาก ห้ามหาย!) */
+/* ช่วยให้ส่วนที่เป็นกระจกฝ้า (Backdrop Blur) บน Navbar ทำงานได้ลื่นไหล ไม่กระตุก */
 .backdrop-blur-md, .backdrop-blur-xl {
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
+}
+
+/* 5. ปรับปรุง Font ให้แสดงผลภาษาไทยสวยขึ้น */
+.font-thai {
+  font-family: var(--font-prompt), sans-serif;
+  line-height: 1.6;
 }
