@@ -8,7 +8,7 @@ export default function AboutPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="font-sans text-[#1d1d1f] pt-30"> 
+    <div className="font-sans text-[#1d1d1f] pt-32"> 
       <div className="relative h-[70vh] flex items-center justify-center bg-slate-900 overflow-hidden">
         <div className="absolute inset-0 opacity-40">
             <Image src="https://images.unsplash.com/photo-1491480020956-6ab214f9ddf6?auto=format&fit=crop&q=80&w=2000" alt="Header Bg" fill className="object-cover" />
