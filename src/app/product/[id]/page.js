@@ -4,7 +4,8 @@ import { motion, useScroll, useSpring, useTransform, AnimatePresence } from "fra
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Loader2, Info, X, PackageOpen, ChevronRight, Home, ArrowRight } from "lucide-react";
-import { doc, getDoc, collection, getDocs, query, where, limit } from "firebase/firestore"; 
+// 🟢 แก้ไข 1: เพิ่ม orderBy เข้าไปใน import (จากรอบที่แล้ว)
+import { doc, getDoc, collection, getDocs, query, where, limit, orderBy } from "firebase/firestore"; 
 import { db } from "../../../lib/firebase";
 
 export default function ProductDetail({ params }) {
@@ -27,18 +28,23 @@ export default function ProductDetail({ params }) {
             const docRef = doc(db, "products", id);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-                // 🟢 1. ดึงข้อมูลออกมาเก็บใส่ตัวแปร data ก่อน เพื่อให้เรียกใช้ง่าย
                 const data = docSnap.data();
-                
                 setItem({ id: docSnap.id, ...data });
-
-                // 🟢 2. เพิ่มบรรทัดนี้เข้าไปครับ: สั่งเปลี่ยนชื่อ Tab ทันที
                 document.title = `${data.title} | Winfood Product`; 
 
-                // (ส่วนดึงสินค้าอื่นๆ เหมือนเดิม)
-                const q = query(collection(db, "products"), where("published", "==", true), limit(6)); 
+                // 🟢 Logic กรอง Other Products เหมือนเดิม
+                const q = query(collection(db, "products"), orderBy("order", "asc")); 
                 const querySnapshot = await getDocs(q);
-                const others = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.id !== id); 
+                const others = querySnapshot.docs
+                    .map(d => {
+                        const dData = d.data();
+                        let status = dData.status;
+                        if (!status) status = dData.published ? 'active' : 'hidden';
+                        return { id: d.id, ...dData, status };
+                    })
+                    .filter(p => p.id !== id && p.status !== 'hidden')
+                    .slice(0, 5); 
+
                 setOtherProducts(others);
             }
         } catch (e) { console.error(e); } finally { setLoading(false); }
@@ -49,18 +55,25 @@ export default function ProductDetail({ params }) {
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-green-600" size={40}/></div>;
   if (!item) return <div className="min-h-screen flex items-center justify-center text-slate-400 font-bold">NOT FOUND</div>;
 
+  // 🟢 Helper: เช็คว่ามีรูป Hero หรือ Cover ไหม
+  const heroImageSrc = item.heroImage || item.image;
+
   return (
     <div className="min-h-screen bg-white text-slate-800 font-sans selection:bg-green-100">
-      <motion.div className="fixed top-0 left-0 right-0 h-1.5 bg-green-500 origin-left z-100" style={{ scaleX }} />
+      <motion.div className="fixed top-0 left-0 right-0 h-1.5 bg-green-500 origin-left z-50" style={{ scaleX }} />
 
-      {/* 🟢 HERO SECTION + NAVIGATION */}
+      {/* HERO SECTION + NAVIGATION */}
       <div className="relative h-[60vh] md:h-[70vh] overflow-hidden bg-slate-900">
         <motion.div style={{ y: heroY }} className="absolute inset-0">
-             <Image src={item.heroImage || item.image} alt={item.title} fill priority className="object-cover opacity-50 scale-105" />
+             {/* 🟢 แก้ไข 2: เช็คก่อนแสดง Hero Image ถ้าไม่มีให้แสดงพื้นหลังเปล่าๆ */}
+             {heroImageSrc ? (
+                <Image src={heroImageSrc} alt={item.title} fill priority className="object-cover opacity-50 scale-105" />
+             ) : (
+                <div className="w-full h-full bg-slate-800 opacity-50"></div>
+             )}
         </motion.div>
         <div className="absolute inset-0 bg-linear-to-t from-white via-transparent to-black/60"></div>
         
-        {/* 🟢 2. เพิ่มปุ่ม Back ตรงนี้ */}
         <div className="absolute top-6 left-6 z-20 flex gap-3">
              <Link href="/#hero" className="bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full text-white hover:bg-white hover:text-slate-900 transition-all shadow-lg">
                 <Home size={20}/>
@@ -88,13 +101,33 @@ export default function ProductDetail({ params }) {
               <div className="max-w-7xl mx-auto px-6">
                   <div className="flex justify-between items-end mb-12">
                       <div><span className="text-green-600 font-bold tracking-widest text-xs uppercase block mb-2">Discover More</span><h3 className="text-3xl font-black text-slate-900 uppercase">Other Product</h3></div>
-                      {/* 🟢 1. แก้ Link View All ให้กลับไป anchor #products */}
                       <Link href="/#products" className="text-sm font-bold text-slate-500 hover:text-green-600 flex items-center gap-2">View All <ArrowRight size={16}/></Link>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
                       {otherProducts.map(prod => (
-                          <Link href={`/product/${prod.id}`} key={prod.id} className="group bg-white rounded-2xl p-4 border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                              <div className="relative aspect-square rounded-xl overflow-hidden bg-white mb-3 p-2"><Image src={prod.image} alt={prod.title} fill className="object-contain group-hover:scale-105 transition-transform duration-700"/></div>
+                          <Link href={`/product/${prod.id}`} key={prod.id} className={`group bg-white rounded-2xl p-4 border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${prod.status === 'out_of_stock' ? 'grayscale opacity-70' : ''}`}>
+                              <div className="relative aspect-square rounded-xl overflow-hidden bg-white mb-3 p-2 border border-slate-50">
+                                  
+                                  {/* 🟢 Logic Priority: Out of Stock > Best Seller */}
+                                  {prod.status === 'out_of_stock' ? (
+                                      <div className="absolute top-2 right-2 z-10 bg-slate-800 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                                          OUT OF STOCK
+                                      </div>
+                                  ) : prod.isBestSeller ? (
+                                      <div className="absolute top-2 right-2 z-10 bg-red-600 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                                          BEST SELLER
+                                      </div>
+                                  ) : null}
+
+                                  {/* 🟢 แก้ไข 3: เช็ค prod.image ก่อนแสดงผล (ของเดิม) */}
+                                  {prod.image ? (
+                                    <Image src={prod.image} alt={prod.title} fill className="object-contain group-hover:scale-105 transition-transform duration-700"/>
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-slate-50 rounded-lg">
+                                        <PackageOpen className="text-slate-300" size={24} />
+                                    </div>
+                                  )}
+                              </div>
                               <h4 className="font-bold text-sm text-slate-900 group-hover:text-green-600 transition-colors line-clamp-1">{prod.title}</h4>
                               <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{prod.shortDesc}</p>
                           </Link>
@@ -107,7 +140,7 @@ export default function ProductDetail({ params }) {
       {/* FIXED MODAL POPUP */}
       <AnimatePresence>
         {selectedBlock && (
-            <div className="fixed inset-0 z-200 flex items-center justify-center p-4 md:p-8 bg-slate-900/60 backdrop-blur-sm">
+            <div className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-8 bg-slate-900/60 backdrop-blur-sm">
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[2.5rem] shadow-2xl relative flex flex-col md:flex-row overflow-hidden">
                     <button onClick={() => setSelectedBlock(null)} className="absolute top-4 right-4 z-20 p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 transition-colors"><X size={20}/></button>
                     
@@ -163,21 +196,23 @@ export default function ProductDetail({ params }) {
 function BlockRenderer({ blocks, onSelect }) {
     if (!blocks || blocks.length === 0) return null;
 
-    // 🟢 1. กรอง Block ที่ถูกปิด (visible === false) ออกไปก่อนแสดงผล
-    const visibleBlocks = blocks.filter(b => b.visible !== false);
+    const processedBlocks = blocks.map(b => ({
+        ...b,
+        status: b.status || (b.visible !== false ? 'active' : 'hidden')
+    })).filter(b => b.status !== 'hidden');
 
     const renderedGroups = [];
     let currentProductGroup = [];
 
-    // 🟢 2. ใช้ visibleBlocks แทน blocks ในลูปนี้
-    visibleBlocks.forEach((block, index) => {
+    processedBlocks.forEach((block, index) => {
         if (block.type === 'separator') {
             if (currentProductGroup.length > 0) {
                 renderedGroups.push(<ProductGrid key={`grid-${index}`} items={currentProductGroup} onSelect={onSelect} />);
                 currentProductGroup = [];
             }
             renderedGroups.push(
-                <div key={`sep-${index}`} className="w-full py-12 flex items-center gap-4">
+                // 🟢 แก้ตรงนี้: เช็คว่ามี content ไหม ถ้าไม่มีให้ gap-0 (เส้นจะชิดกัน) ถ้ามีให้ gap-4
+                <div key={`sep-${index}`} className={`w-full py-12 flex items-center ${block.content ? 'gap-4' : 'gap-0'}`}>
                     <div className="h-px bg-slate-200 flex-1"></div>
                     {block.content && (
                         <div className={`uppercase tracking-tight ${block.textColor || 'text-slate-800'} ${block.fontWeight || 'font-black'} text-xl md:text-2xl`} dangerouslySetInnerHTML={{__html: block.content}}></div>
@@ -200,8 +235,28 @@ function ProductGrid({ items, onSelect }) {
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12 mb-12">
             {items.map((block, i) => (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} key={i} className="group cursor-pointer flex flex-col items-center text-center gap-4" onClick={() => onSelect(block)}>
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }} 
+                    whileInView={{ opacity: 1, y: 0 }} 
+                    viewport={{ once: true }} 
+                    transition={{ delay: i * 0.05 }} 
+                    key={i} 
+                    className={`group cursor-pointer flex flex-col items-center text-center gap-4 ${block.status === 'out_of_stock' ? 'grayscale opacity-60' : ''}`} 
+                    onClick={() => onSelect(block)}
+                >
                     <div className="relative w-full aspect-square bg-transparent rounded-2xl overflow-visible transition-transform duration-500 group-hover:-translate-y-2">
+                        
+                        {/* 🟢 Logic Priority: Out of Stock > Best Seller (ตำแหน่งมุมขวาบนเหมือนกัน) */}
+                        {block.status === 'out_of_stock' ? (
+                            <div className="absolute top-0 right-0 z-10 bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg shadow-sm">
+                                OUT OF STOCK
+                            </div>
+                        ) : block.isBestSeller ? (
+                            <div className="absolute top-0 right-0 z-10 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg shadow-sm">
+                                BEST SELLER
+                            </div>
+                        ) : null}
+
                         {block.mediaSrc ? (
                             <Image src={block.mediaSrc} alt={block.heading} fill className="object-contain drop-shadow-xl" sizes="(max-width: 768px) 50vw, 25vw"/>
                         ) : (

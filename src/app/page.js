@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { collection, getDocs, query, orderBy, where } from "firebase/firestore";
 import { db } from "../lib/firebase"; 
 import { motion, AnimatePresence } from "framer-motion";
-// 🟢 แก้จุดที่ 1: เพิ่ม Image as ImageIcon เข้าไปใน import นี้
-import { Loader2, ArrowRight, ChevronRight, ChevronLeft, Image as ImageIcon } from "lucide-react";
+// 🟢 แก้ไข 1: เพิ่ม PackageOpen เข้ามาใน import
+import { Loader2, ArrowRight, ChevronRight, ChevronLeft, Image as ImageIcon, PackageOpen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,27 +14,34 @@ export default function HomePage() {
   const [currentBanner, setCurrentBanner] = useState(0); 
   const [loading, setLoading] = useState(true);
 
-  // Fetch Data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const prodQ = query(collection(db, "products"), where("published", "==", true), orderBy("order", "asc"));
+        const prodQ = query(collection(db, "products"), orderBy("order", "asc"));
         const prodSnap = await getDocs(prodQ);
-        setProducts(prodSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        
+        const validProducts = prodSnap.docs
+            .map(doc => {
+                const data = doc.data();
+                let status = data.status;
+                if (!status) status = data.published ? 'active' : 'hidden';
+                return { id: doc.id, ...data, status };
+            })
+            .filter(p => p.status !== 'hidden'); 
+
+        setProducts(validProducts);
 
         const banQ = query(collection(db, "banners"), where("published", "==", true), orderBy("order", "asc"));
         const banSnap = await getDocs(banQ);
         setBanners(banSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 
       } catch (e) { console.error(e); } finally { 
-        // หน่วงเวลาปิดหน้าโหลดนิดนึง เพื่อให้เห็น Preloader สวยๆ ไม่กระพริบหายเร็วไป
         setTimeout(() => setLoading(false), 800); 
       }
     };
     fetchData();
   }, []);
 
-  // Auto Slide
   useEffect(() => {
     if (banners.length <= 1) return;
     const timer = setInterval(() => {
@@ -46,12 +53,10 @@ export default function HomePage() {
   const nextBanner = () => setCurrentBanner((prev) => (prev + 1) % banners.length);
   const prevBanner = () => setCurrentBanner((prev) => (prev - 1 + banners.length) % banners.length);
 
-  // 🟢 แก้จุดที่ 2: ถ้ากำลังโหลด ให้แสดงหน้า Full Screen Preloader
   if (loading) {
       return (
-        <div className="fixed inset-0 bg-white z-9999 flex flex-col items-center justify-center space-y-6">
+        <div className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center space-y-6">
             <div className="relative w-40 h-20 animate-pulse">
-                 {/* โลโก้บริษัทตอนโหลด */}
                  <Image src="/images/Logo cl.png" alt="Loading" fill className="object-contain" priority />
             </div>
             <div className="flex items-center gap-3 text-slate-400 text-xs font-bold uppercase tracking-[0.2em]">
@@ -65,7 +70,7 @@ export default function HomePage() {
   return (
     <div className="overflow-x-hidden pt-20 font-sans animate-in fade-in duration-700">
       
-      {/* 🟢 HERO SECTION */}
+      {/* HERO SECTION */}
       <section id="hero" className="relative pt-16 pb-0 px-6 bg-white overflow-hidden min-h-150 flex items-center">
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center h-full">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="z-10 text-center lg:text-left flex flex-col justify-center pb-10 lg:pb-0">
@@ -88,14 +93,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 🟢 DYNAMIC BANNER SLIDER */}
+      {/* DYNAMIC BANNER SLIDER */}
       <section className="w-full p-0 m-0 bg-white"> 
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 1 }} viewport={{ once: true }} className="relative w-full aspect-8/3 overflow-hidden bg-white">
             {banners.length > 0 ? (
                 <AnimatePresence> 
                     <motion.div key={currentBanner} initial={{ opacity: 0 }} animate={{ opacity: 1, zIndex: 1 }} exit={{ opacity: 0, zIndex: 0 }} transition={{ duration: 1.5, ease: "easeInOut" }} className="absolute inset-0 w-full h-full">
                         <div className="absolute inset-0 bg-black/5 z-10 pointer-events-none"></div>
-                        <Image src={banners[currentBanner].image} alt="Banner" fill className="object-cover" priority />
+                        
+                        {/* 🟢 แก้ไข 2: เช็ค Banner Image ด้วย เพื่อความชัวร์ */}
+                        {banners[currentBanner].image ? (
+                            banners[currentBanner].link ? (
+                                <Link href={banners[currentBanner].link} className="block w-full h-full cursor-pointer relative z-20">
+                                    <Image src={banners[currentBanner].image} alt="Banner" fill className="object-cover" priority />
+                                </Link>
+                            ) : (
+                                <Image src={banners[currentBanner].image} alt="Banner" fill className="object-cover" priority />
+                            )
+                        ) : (
+                            <div className="w-full h-full bg-slate-200 flex items-center justify-center">
+                                <ImageIcon className="text-slate-400" size={64} />
+                            </div>
+                        )}
+
                     </motion.div>
                 </AnimatePresence>
             ) : (
@@ -109,9 +129,9 @@ export default function HomePage() {
             
             {banners.length > 1 && (
                 <>
-                    <button onClick={prevBanner} className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white/80 hover:text-white transition-all z-20"><ChevronLeft className="w-4 h-4 md:w-6 md:h-6"/></button>
-                    <button onClick={nextBanner} className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white/80 hover:text-white transition-all z-20"><ChevronRight className="w-4 h-4 md:w-6 md:h-6"/></button>
-                    <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                    <button onClick={prevBanner} className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white/80 hover:text-white transition-all z-30"><ChevronLeft className="w-4 h-4 md:w-6 md:h-6"/></button>
+                    <button onClick={nextBanner} className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white/80 hover:text-white transition-all z-30"><ChevronRight className="w-4 h-4 md:w-6 md:h-6"/></button>
+                    <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
                         {banners.map((_, i) => (
                             <button key={i} onClick={() => setCurrentBanner(i)} className={`h-1.5 md:h-2 rounded-full transition-all duration-500 shadow-sm ${i === currentBanner ? 'bg-white w-6 md:w-10' : 'bg-white/40 w-1.5 md:w-2'}`} />
                         ))}
@@ -121,21 +141,40 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* 🟢 PRODUCTS SECTION */}
+      {/* PRODUCTS SECTION */}
       <section id="products" className="py-24 bg-[#F9F9FB]">
         <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight uppercase text-slate-900">OUR PRODUCTS</h2>
                 <div className="h-1 w-16 bg-green-500 mx-auto mt-4 rounded-full"></div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                 <AnimatePresence mode="popLayout">
                     {products.map(item => (
                         <motion.div layout key={item.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
                             <Link href={`/product/${item.id}`} className="group block h-full">
-                                <div className="bg-white rounded-3xl p-6 border border-slate-100 hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1">
+                                <div className={`bg-white rounded-3xl p-6 border border-slate-100 hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1 relative overflow-hidden ${item.status === 'out_of_stock' ? 'grayscale opacity-70' : ''}`}>
+                                    
+                                    {/* 🟢 Logic แสดงป้ายแบบ Priority: ถ้าของหมดโชว์ของหมดก่อน ถ้ามีของค่อยโชว์ Best Seller */}
+                                    {item.status === 'out_of_stock' ? (
+                                        <div className="absolute top-4 right-4 z-10 bg-slate-800 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                                            OUT OF STOCK
+                                        </div>
+                                    ) : item.isBestSeller ? (
+                                        <div className="absolute top-4 right-4 z-10 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                                            BEST SELLER
+                                        </div>
+                                    ) : null}
+
                                     <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-50 mb-6 border border-slate-50">
-                                        <Image src={item.image} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700"/>
+                                        {/* 🟢 แก้ไข 4: เช็ค item.image ก่อนแสดงผล */}
+                                        {item.image ? (
+                                            <Image src={item.image} alt={item.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700"/>
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-slate-50">
+                                                <PackageOpen className="text-slate-300" size={48} />
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="flex items-start justify-between gap-4 mb-2">
                                         <span className="text-[10px] font-bold text-green-600 uppercase tracking-wider bg-green-50 px-2 py-1 rounded">{item.category}</span>
@@ -155,7 +194,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 🟢 ABOUT PREVIEW */}
+      {/* ABOUT PREVIEW */}
       <section className="py-24 px-6 bg-white">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
             <div className="flex-1 space-y-6 text-center md:text-left">
