@@ -162,10 +162,15 @@ export default function ProductDetail({ params }) {
 // Helper Component
 function BlockRenderer({ blocks, onSelect }) {
     if (!blocks || blocks.length === 0) return null;
+
+    // 🟢 1. กรอง Block ที่ถูกปิด (visible === false) ออกไปก่อนแสดงผล
+    const visibleBlocks = blocks.filter(b => b.visible !== false);
+
     const renderedGroups = [];
     let currentProductGroup = [];
 
-    blocks.forEach((block, index) => {
+    // 🟢 2. ใช้ visibleBlocks แทน blocks ในลูปนี้
+    visibleBlocks.forEach((block, index) => {
         if (block.type === 'separator') {
             if (currentProductGroup.length > 0) {
                 renderedGroups.push(<ProductGrid key={`grid-${index}`} items={currentProductGroup} onSelect={onSelect} />);
