@@ -671,7 +671,7 @@ export default function AdminPage() {
   );
 }
 
-// 🟢 ฟังก์ชันช่วยบีบอัดรูปภาพ (เวอร์ชั่น Turbo แก้ไขแล้ว)
+// 🟢 ฟังก์ชันช่วยบีบอัดรูปภาพ (สูตร Premium Food: ชัดระดับ HD+ สีสด รายละเอียดครบ)
 const compressImage = (file) => {
   return new Promise((resolve) => {
     // ถ้าไม่ใช่รูปภาพ ให้คืนค่าไฟล์เดิมกลับไป
@@ -680,28 +680,38 @@ const compressImage = (file) => {
         return;
     }
 
-    // 🚀 ใช้ createObjectURL แทน FileReader (เร็วกว่าและกินแรมน้อยกว่ามหาศาล)
+    // 🚀 ใช้ createObjectURL เพื่อความเร็วสูงสุด
     const imgUrl = URL.createObjectURL(file);
     const img = document.createElement("img");
     img.src = imgUrl;
     
     img.onload = () => {
         const canvas = document.createElement("canvas");
-        const MAX_WIDTH = 1200; // ความกว้างสูงสุด
+        
+        // 🟢 ปรับ 1: เพิ่มความกว้างเป็น 1920px (Full HD Standard)
+        // รายละเอียด Texture อาหารจะมาชัดกว่าเดิมมาก
+        const MAX_WIDTH = 1920; 
         const scaleSize = MAX_WIDTH / img.width;
         
         if (scaleSize < 1) {
             canvas.width = MAX_WIDTH;
             canvas.height = img.height * scaleSize;
         } else {
+            // ถ้ารูปเล็กกว่า 1920px อยู่แล้ว ให้ใช้ขนาดเดิมเลย (ไม่ย่อ ไม่ขยาย)
             canvas.width = img.width;
             canvas.height = img.height;
         }
 
         const ctx = canvas.getContext("2d");
+        
+        // 🟢 ปรับ 2: เปิดโหมด "High Quality" แบบเต็มสูบ
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+        
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         
-        // 🟢 แก้ไขตรงนี้: ต้องใช้ canvas.toBlob ไม่ใช่ ctx.toBlob
+        // 🟢 ปรับ 3: ดันคุณภาพเป็น 0.96 (96%) 
+        // จุดนี้คือ Sweet Spot ของภาพอาหารที่ต้องการความใสและคม
         canvas.toBlob((blob) => {
           // สร้างชื่อไฟล์ใหม่
           const newName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
@@ -714,15 +724,14 @@ const compressImage = (file) => {
           // 🧹 คืนหน่วยความจำ
           URL.revokeObjectURL(imgUrl);
           
-          // Debug ดูขนาดไฟล์
-          console.log(`บีบอัดเสร็จ: ${file.size} -> ${newFile.size} bytes`);
+          // Debug ดูขนาดไฟล์ใหม่
+          console.log(`Premium Food Mode: ${file.size} -> ${newFile.size} bytes`);
           
           resolve(newFile);
-        }, "image/webp", 0.8); 
+        }, "image/webp", 0.96); 
     }
     
     img.onerror = () => {
-        // ถ้าไฟล์เสียหรืออ่านไม่ได้ ให้ส่งไฟล์เดิมไปแทน กันระบบพัง
         URL.revokeObjectURL(imgUrl);
         resolve(file); 
     }
