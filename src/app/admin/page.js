@@ -226,7 +226,9 @@ export default function AdminPage() {
     fontWeight: block.fontWeight || 'font-bold',
     attributes: block.attributes || [], 
     fda: block.fda || "", 
-    storage: block.storage || ""
+    storage: block.storage || "",
+    // 🟢 เพิ่มฟิลด์รูปโลโก้สำหรับเส้นคั่น
+    separatorImage: block.separatorImage || "" 
   });
 
   const addBlockProduct = () => setBlocks([...blocks, normalizeBlock({ type: 'product', layout: 'left' })]);
@@ -409,7 +411,6 @@ export default function AdminPage() {
                                             </div>
                                             <h3 className="font-bold text-lg text-slate-800 truncate">{item.title}</h3>
                                             
-                                            {/* 🟢 แก้ตรงนี้ครับ */}
                                             <p className="text-xs text-slate-400 truncate">
                                                 {item.contentBlocks?.filter(b => b.type !== 'separator').length || 0} รายการย่อยข้างใน
                                             </p>
@@ -488,7 +489,6 @@ export default function AdminPage() {
                                                 </div>
                                                 <div className="flex gap-2 items-center">
                                                     
-                                                    {/* 🟢 ปุ่ม Best Seller รายสินค้า (Sub-Item) แบบชัดเจน */}
                                                     {block.type !== 'separator' && (
                                                         <button 
                                                             onClick={() => updateBlock(index, 'isBestSeller', !block.isBestSeller)}
@@ -509,7 +509,25 @@ export default function AdminPage() {
                                             </div>
                                             
                                             {block.type === 'separator' ? (
-                                                <div className="space-y-4">
+                                                <div className="space-y-6">
+                                                    {/* 🟢 ส่วนที่เพิ่มใหม่: อัปโหลดรูปโลโก้สำหรับเส้นคั่น */}
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                                        <ImageUploader 
+                                                            label="รูปโลโก้คั่น (Separator Logo)" 
+                                                            currentImage={block.separatorImage} 
+                                                            onImageUpload={(url) => updateBlock(index, 'separatorImage', url)}
+                                                            folderName="products/separators"
+                                                        />
+                                                        <div className="text-xs text-slate-500 space-y-2 mt-6">
+                                                            <p className="font-bold flex items-center gap-1"><Info size={14}/> คำแนะนำ:</p>
+                                                            <ul className="list-disc pl-4 space-y-1">
+                                                                <li>ควรใช้รูปสัดส่วน 1:1 (สี่เหลี่ยมจัตุรัส)</li>
+                                                                <li>พื้นหลังควรโปร่งใส (Transparent PNG/WEBP) เพื่อความสวยงาม</li>
+                                                                <li>รูปจะแสดงอยู่ตรงกลางเหนือข้อความ (ถ้ามี)</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+
                                                     <div className="space-y-1">
                                                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">ข้อความคั่น (Separator Text)</label>
                                                         <input 

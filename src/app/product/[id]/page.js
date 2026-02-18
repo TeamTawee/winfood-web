@@ -60,11 +60,10 @@ export default function ProductDetail({ params }) {
 
   return (
     <div className="min-h-screen bg-white text-slate-800 font-sans selection:bg-green-100">
-      <motion.div className="fixed top-0 left-0 right-0 h-1.5 bg-green-500 origin-left z-50" style={{ scaleX }} />
+      <motion.div className="fixed top-0 left-0 right-0 h-1.5 bg-green-500 origin-left z-[120]" style={{ scaleX }} />
 
       {/* HERO SECTION + NAVIGATION */}
-      {/* 🟢 1. ปรับความสูง Hero ให้สูงขึ้น (h-[75vh] md:h-[85vh]) เพื่อโชว์ภาพมากขึ้น */}
-      <div className="relative h-[95vh] md:h-[95vh] overflow-hidden bg-slate-900">
+      <div className="relative h-[95vh] overflow-hidden bg-slate-900">
         <motion.div style={{ y: heroY }} className="absolute inset-0">
              {heroImageSrc ? (
                 <Image src={heroImageSrc} alt={item.title} fill priority className="object-cover opacity-50 scale-105" />
@@ -74,7 +73,6 @@ export default function ProductDetail({ params }) {
         </motion.div>
         <div className="absolute inset-0 bg-linear-to-t from-white via-transparent to-black/60"></div>
         
-        {/* 🟢 2. ปรับปุ่ม Back ให้ลงมาอีก (top-48) */}
         <div className="absolute top-48 left-6 z-30 flex gap-3">
              <Link href="/#products" className="bg-white/10 backdrop-blur-md border border-white/20 pl-4 pr-6 py-3 rounded-full text-white text-sm font-bold flex gap-2 items-center hover:bg-white hover:text-slate-900 transition-all shadow-lg group">
                 <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform"/> 
@@ -82,7 +80,6 @@ export default function ProductDetail({ params }) {
              </Link>
         </div>
 
-        {/* 🟢 3. ปรับข้อความ (Head) ให้ขยับขึ้น (ลด pt เหลือ 20) ไม่ให้จม */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-50 text-center px-4">
              <span className="text-white/90 font-black tracking-[0.3em] uppercase text-xs md:text-sm mb-4 border border-white/30 px-4 py-1.5 rounded-full backdrop-blur-md">{item.category || "Collection"}</span>
              <h1 className="text-4xl md:text-7xl font-black text-white leading-tight uppercase drop-shadow-2xl">{item.title}</h1>
@@ -140,15 +137,15 @@ export default function ProductDetail({ params }) {
       <AnimatePresence>
         {selectedBlock && (
             <div 
-                className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-8 bg-slate-900/60 backdrop-blur-sm"
-                onClick={() => setSelectedBlock(null)} // 🟢 1. เพิ่มบรรทัดนี้: สั่งปิดเมื่อคลิกพื้นหลัง
+                className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-slate-900/60 backdrop-blur-sm"
+                onClick={() => setSelectedBlock(null)}
             >
                 <motion.div 
                     initial={{ opacity: 0, scale: 0.95 }} 
                     animate={{ opacity: 1, scale: 1 }} 
                     exit={{ opacity: 0, scale: 0.95 }} 
                     className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[2.5rem] shadow-2xl relative flex flex-col md:flex-row overflow-hidden"
-                    onClick={(e) => e.stopPropagation()} // 🟢 2. เพิ่มบรรทัดนี้: กันไม่ให้คลิกในกล่องแล้วปิด
+                    onClick={(e) => e.stopPropagation()}
                 >
                     <button onClick={() => setSelectedBlock(null)} className="absolute top-4 right-4 z-20 p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 transition-colors"><X size={20}/></button>
                     <div className="w-full md:w-5/12 bg-slate-50 p-8 flex items-center justify-center shrink-0 md:order-last min-h-62.5 md:min-h-full relative">
@@ -196,28 +193,60 @@ export default function ProductDetail({ params }) {
   );
 }
 
-// ... Helper Components (BlockRenderer, ProductGrid) คงเดิม ...
+// 🟢 BlockRenderer: ปรับปรุงให้รองรับ separatorImage
 function BlockRenderer({ blocks, onSelect }) {
     if (!blocks || blocks.length === 0) return null;
     const processedBlocks = blocks.map(b => ({ ...b, status: b.status || (b.visible !== false ? 'active' : 'hidden') })).filter(b => b.status !== 'hidden');
     const renderedGroups = [];
     let currentProductGroup = [];
+    
     processedBlocks.forEach((block, index) => {
         if (block.type === 'separator') {
+            // Render Product Group ก่อนหน้า
             if (currentProductGroup.length > 0) {
                 renderedGroups.push(<ProductGrid key={`grid-${index}`} items={currentProductGroup} onSelect={onSelect} />);
                 currentProductGroup = [];
             }
+            // Render Separator (Text + Image)
             renderedGroups.push(
-                <div key={`sep-${index}`} className={`w-full py-12 flex items-center ${block.content ? 'gap-4' : 'gap-0'}`}>
+                <div key={`sep-${index}`} className="w-full py-16 flex items-center justify-center gap-6">
                     <div className="h-px bg-slate-200 flex-1"></div>
-                    {block.content && (<div className={`uppercase tracking-tight ${block.textColor || 'text-slate-800'} ${block.fontWeight || 'font-black'} text-xl md:text-2xl`} dangerouslySetInnerHTML={{__html: block.content}}></div>)}
+                    
+                    <div className="flex flex-col items-center gap-3">
+                        {/* ✅ แสดงรูปโลโก้ ถ้ามี */}
+                        {block.separatorImage && (
+                            <div className="relative w-16 h-16 md:w-20 md:h-20 shrink-0">
+                                <Image 
+                                    src={block.separatorImage} 
+                                    alt="Separator Logo" 
+                                    fill 
+                                    className="object-contain" 
+                                />
+                            </div>
+                        )}
+                        
+                        {/* แสดงข้อความ ถ้ามี */}
+                        {block.content && (
+                            <div 
+                                className={`uppercase tracking-tight ${block.textColor || 'text-slate-800'} ${block.fontWeight || 'font-black'} text-xl md:text-2xl text-center`} 
+                                dangerouslySetInnerHTML={{__html: block.content}}
+                            ></div>
+                        )}
+                    </div>
+
                     <div className="h-px bg-slate-200 flex-1"></div>
                 </div>
             );
-        } else { currentProductGroup.push(block); }
+        } else { 
+            currentProductGroup.push(block); 
+        }
     });
-    if (currentProductGroup.length > 0) { renderedGroups.push(<ProductGrid key={`grid-last`} items={currentProductGroup} onSelect={onSelect} />); }
+    
+    // Render Product Group ที่เหลือ
+    if (currentProductGroup.length > 0) { 
+        renderedGroups.push(<ProductGrid key={`grid-last`} items={currentProductGroup} onSelect={onSelect} />); 
+    }
+    
     return <>{renderedGroups}</>;
 }
 

@@ -134,7 +134,7 @@ export default function HomePage() {
         <FloatingItem src="/images/leaf-1.png" className="top-10 right-[5%] w-32 h-32 blur-[1.5px] rotate-45 opacity-70" speed={-2} rotateRange={15} />
         <FloatingItem src="/images/ice.png" className="bottom-32 left-[2%] w-20 h-20 blur-[2px] opacity-60 rotate-12" speed={1.2} rotateRange={10} />
         <FloatingItem src="/images/fruit-1.png" className="top-[20%] left-[10%] w-16 h-16 opacity-40 blur-[2px] rotate-[-20deg]" speed={0.8} />
-        <FloatingItem src="/images/leaf-1.png" className="bottom-[10%] right-[15%] w-24 h-24 opacity-30 blur-[3px] rotate-[60deg]" speed={-0.5} />
+        <FloatingItem src="/images/leaf-1.png" className="bottom-[10%] right-[15%] w-24 h-24 opacity-30 blur-[3px] rotate-60" speed={-0.5} />
 
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center h-full relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="z-10 text-center lg:text-left flex flex-col justify-center pb-10 lg:pb-0">
@@ -227,7 +227,7 @@ export default function HomePage() {
         {/* Floating Props: ชุดที่ 2 (เพิ่มจำนวนและกระจายตัว) */}
         <FloatingItem src="/images/fruit-1.png" className="absolute top-10 -left-10 w-48 h-48 opacity-20 blur-[2px] rotate-90" speed={0.5} />
         <FloatingItem src="/images/ice.png" className="absolute bottom-20 right-5 w-32 h-32 opacity-10 blur-[3px]" speed={-0.3} rotateRange={20} />
-        <FloatingItem src="/images/leaf-1.png" className="absolute top-[40%] right-[10%] w-20 h-20 opacity-30 blur-[1px] rotate-[120deg]" speed={0.7} />
+        <FloatingItem src="/images/leaf-1.png" className="absolute top-[40%] right-[10%] w-20 h-20 opacity-30 blur-[1px] rotate-120" speed={0.7} />
         <FloatingItem src="/images/ice.png" className="absolute top-[10%] right-[20%] w-12 h-12 opacity-20 blur-[1px]" speed={-0.2} rotateRange={45} />
         
         <div className="max-w-7xl mx-auto px-6 relative z-10">

@@ -115,11 +115,11 @@ function Footer() {
           
           {/* ใช้ Flex wrap บนมือถือเพื่อให้ Email กับ Phone อยู่บรรทัดเดียวกันได้ถ้าจอใหญ่พอ */}
           <div className="flex flex-col sm:flex-row md:flex-col flex-wrap gap-2 md:gap-4 text-gray-300 text-sm">
-            <div className="flex items-center gap-3 min-w-[200px]">
+            <div className="flex items-center gap-3 min-w-50">
                 <Mail size={18} className="text-green-500 shrink-0" />
                 <span>contact@winfic.com</span>
             </div>
-            <div className="flex items-center gap-3 min-w-[150px]">
+            <div className="flex items-center gap-3 min-w-37.5">
                 <Phone size={18} className="text-green-500 shrink-0" />
                 <span>+66 2726 6732</span>
             </div>
@@ -145,8 +145,6 @@ function Footer() {
           <div className="pt-2 md:pt-4 border-t border-white/10 mt-2 md:mt-6">
             <a 
               href="#"  // 🔗 ใส่ลิงก์ร้าน Shopee ตรงนี้
-              target="_blank" 
-              rel="noopener noreferrer"
               className="bg-[#EE4D2D] hover:bg-[#ff5535] text-white pl-3 pr-4 py-2 rounded-lg inline-flex items-center gap-3 transition-all shadow-lg hover:-translate-y-1 group w-full md:w-auto justify-center md:justify-start"
             >
                 <div className="bg-white/20 p-1.5 rounded-md group-hover:bg-white/30 transition-colors">
