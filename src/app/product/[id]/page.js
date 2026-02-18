@@ -139,8 +139,17 @@ export default function ProductDetail({ params }) {
       {/* FIXED MODAL POPUP */}
       <AnimatePresence>
         {selectedBlock && (
-            <div className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-8 bg-slate-900/60 backdrop-blur-sm">
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[2.5rem] shadow-2xl relative flex flex-col md:flex-row overflow-hidden">
+            <div 
+                className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-8 bg-slate-900/60 backdrop-blur-sm"
+                onClick={() => setSelectedBlock(null)} // 🟢 1. เพิ่มบรรทัดนี้: สั่งปิดเมื่อคลิกพื้นหลัง
+            >
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }} 
+                    animate={{ opacity: 1, scale: 1 }} 
+                    exit={{ opacity: 0, scale: 0.95 }} 
+                    className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[2.5rem] shadow-2xl relative flex flex-col md:flex-row overflow-hidden"
+                    onClick={(e) => e.stopPropagation()} // 🟢 2. เพิ่มบรรทัดนี้: กันไม่ให้คลิกในกล่องแล้วปิด
+                >
                     <button onClick={() => setSelectedBlock(null)} className="absolute top-4 right-4 z-20 p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 transition-colors"><X size={20}/></button>
                     <div className="w-full md:w-5/12 bg-slate-50 p-8 flex items-center justify-center shrink-0 md:order-last min-h-62.5 md:min-h-full relative">
                         <div className="relative w-40 h-40 md:w-64 md:h-64 bg-white rounded-full shadow-inner border border-slate-100 flex items-center justify-center overflow-hidden">
