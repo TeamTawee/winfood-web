@@ -60,7 +60,7 @@ export default function ProductDetail({ params }) {
 
   return (
     <div className="min-h-screen bg-white text-slate-800 font-sans selection:bg-green-100">
-      <motion.div className="fixed top-0 left-0 right-0 h-1.5 bg-green-500 origin-left z-[120]" style={{ scaleX }} />
+      <motion.div className="fixed top-0 left-0 right-0 h-1.5 bg-green-500 origin-left z-120" style={{ scaleX }} />
 
       {/* HERO SECTION + NAVIGATION */}
       <div className="relative h-[95vh] overflow-hidden bg-slate-900">
@@ -137,7 +137,7 @@ export default function ProductDetail({ params }) {
       <AnimatePresence>
         {selectedBlock && (
             <div 
-                className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-slate-900/60 backdrop-blur-sm"
+                className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-8 bg-slate-900/60 backdrop-blur-sm"
                 onClick={() => setSelectedBlock(null)}
             >
                 <motion.div 
