@@ -160,7 +160,7 @@ export default function ProductDetail({ params }) {
                     <div className="w-full md:w-7/12 p-8 md:p-12 overflow-y-auto bg-white flex-1">
                         <div className="mb-6">
                             <h2 className="text-2xl md:text-3xl font-black text-cyan-600 uppercase leading-tight mb-2">{selectedBlock.heading}</h2>
-                            {selectedBlock.content && <p className="text-slate-500 text-sm mt-4">{selectedBlock.content}</p>}
+                            {selectedBlock.content && <p className="text-slate-500 text-sm mt-4 whitespace-pre-wrap">{selectedBlock.content}</p>}
                         </div>
                         <div className="space-y-6">
                             {selectedBlock.attributes?.length > 0 && (
@@ -179,7 +179,9 @@ export default function ProductDetail({ params }) {
                             )}
                             {(selectedBlock.storage || selectedBlock.fda) && (
                                 <div className="pt-6 border-t border-slate-100 space-y-4 text-xs text-slate-500 font-medium">
-                                    {selectedBlock.storage && (<p>Storage: <span className="text-slate-800">{selectedBlock.storage}</span></p>)}
+                                    {selectedBlock.storage && (
+    <p className="whitespace-pre-wrap">Storage: <span className="text-slate-800">{selectedBlock.storage}</span></p>
+)}
                                     {selectedBlock.fda && (<p className="font-bold text-slate-800 uppercase tracking-wide">FDA Number: <span className="font-mono font-normal text-slate-600 ml-1">{selectedBlock.fda}</span></p>)}
                                 </div>
                             )}

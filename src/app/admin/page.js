@@ -590,9 +590,15 @@ export default function AdminPage() {
                                                                 <input type="text" value={block.fda} onChange={e => updateBlock(index, 'fda', e.target.value)} className="w-full p-2 bg-white rounded-lg text-xs outline-none shadow-sm" placeholder="เลข อย..."/>
                                                             </div>
                                                             <div className="space-y-1">
-                                                                <label className="text-[10px] font-bold text-slate-400 uppercase">การเก็บรักษา (Storage)</label>
-                                                                <input type="text" value={block.storage} onChange={e => updateBlock(index, 'storage', e.target.value)} className="w-full p-2 bg-white rounded-lg text-xs outline-none shadow-sm" placeholder="ข้อมูลการเก็บรักษา..."/>
-                                                            </div>
+    <label className="text-[10px] font-bold text-slate-400 uppercase">การเก็บรักษา (Storage) | รองรับการขึ้นบรรทัดใหม่</label>
+    <textarea 
+        value={block.storage} 
+        onChange={e => updateBlock(index, 'storage', e.target.value)} 
+        rows={3} // ปรับให้ใหญ่ขึ้นเป็น 3 บรรทัด
+        className="w-full p-2 bg-white rounded-lg text-xs outline-none shadow-sm resize-none focus:ring-2 focus:ring-green-500" 
+        placeholder="ข้อมูลการเก็บรักษา (กด Enter เพื่อขึ้นบรรทัดใหม่ได้)..."
+    />
+</div>
                                                         </div>
                                                     </div>
                                                 </div>
