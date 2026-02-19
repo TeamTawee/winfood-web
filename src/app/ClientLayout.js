@@ -144,7 +144,9 @@ function Footer() {
           {/* Shopee Banner (เอาหัวข้อออก และปรับระยะห่าง) */}
           <div className="pt-2 md:pt-4 border-t border-white/10 mt-2 md:mt-6">
             <a 
-              href="#"  // 🔗 ใส่ลิงก์ร้าน Shopee ตรงนี้
+              href="https://shopee.co.th/goodtasteofficial"  // 🟢 1. ใส่ลิงก์ตรงนี้
+              target="_blank"             // 🟢 2. เพิ่มบรรทัดนี้ เพื่อให้เปิดแท็บใหม่
+              rel="noopener noreferrer"   // 🟢 3. เพิ่มบรรทัดนี้ เพื่อความปลอดภัย
               className="bg-[#EE4D2D] hover:bg-[#ff5535] text-white pl-3 pr-4 py-2 rounded-lg inline-flex items-center gap-3 transition-all shadow-lg hover:-translate-y-1 group w-full md:w-auto justify-center md:justify-start"
             >
                 <div className="bg-white/20 p-1.5 rounded-md group-hover:bg-white/30 transition-colors">
