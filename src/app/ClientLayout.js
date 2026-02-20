@@ -136,7 +136,7 @@ function Footer() {
           
           {/* Social Icons */}
           <div className="flex gap-4">
-            <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#1877F2] transition-all"><Facebook size={18} /></a>
+            <a href="https://www.facebook.com/profile.php?id=61588209103041" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#1877F2] transition-all"><Facebook size={18} /></a>
             <a href="https://lin.ee/xyqoDch" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#06C755] transition-all group text-white"><span className="text-[10px] font-black tracking-tight group-hover:scale-110 transition-transform">LINE</span></a>
             <a href="https://maps.app.goo.gl/83yvBaikXtVsqVkT9" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-red-500 transition-all"><Map size={18} /></a>
           </div>
