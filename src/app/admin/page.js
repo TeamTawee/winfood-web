@@ -335,8 +335,24 @@ export default function AdminPage() {
       finally { setGlobalLoading(false); }
   };
 
-  const handleUpdateBannerLink = async (id, newLink) => {
+  const handleBannerLinkChange = (id, newLink) => {
+      // 1. อัปเดตหน้าจอก่อนทันที (พิมพ์ลื่น วางลิงก์ได้ปกติ)
+      setBanners(banners.map(b => b.id === id ? { ...b, link: newLink } : b));
+  };
+
+  const handleSaveBannerLink = async (id, newLink) => {
+      // 2. เซฟลง Database เมื่อคลิกเมาส์ออกนอกช่อง (onBlur) ลดภาระเซิร์ฟเวอร์
       try { await updateDoc(doc(db, "banners", id), { link: newLink }); } catch (e) { console.error(e); }
+  };
+
+  const handleUpdateBannerImage = async (id, newImage) => {
+      // 3. ฟังก์ชันสำหรับเปลี่ยนรูปแบนเนอร์เดิม
+      setGlobalLoading(true);
+      try {
+          await updateDoc(doc(db, "banners", id), { image: newImage });
+          await fetchBanners();
+      } catch (e) { console.error(e); }
+      finally { setGlobalLoading(false); }
   };
 
   const handleToggleBannerStatus = async (id, currentStatus) => {
@@ -654,26 +670,29 @@ export default function AdminPage() {
                                   <button onClick={() => handleMoveItem('banners', banners, index, 'up')} className="p-1 hover:bg-slate-100 rounded text-slate-400"><ArrowUp size={16}/></button>
                                   <button onClick={() => handleMoveItem('banners', banners, index, 'down')} className="p-1 hover:bg-slate-100 rounded text-slate-400"><ArrowDown size={16}/></button>
                                 </div>
-                                <div className="w-full md:w-32 aspect-21/9 bg-slate-100 rounded-lg overflow-hidden shrink-0 relative flex items-center justify-center">
-                                    {banner.image ? (
-                                        <img src={banner.image} className="w-full h-full object-cover" alt="banner"/>
-                                    ) : (
-                                        <ImageIcon className="text-slate-300" size={24}/>
-                                    )}
-                                </div>
-                                <div className="flex-1 min-w-0 w-full space-y-2">
-                                    <div className="text-xs font-bold text-slate-400 uppercase truncate">รูปภาพ: {banner.image}</div>
-                                    <div className="flex items-center gap-2">
-                                        <LinkIcon size={12} className="text-green-600"/>
-                                        <input 
-                                            type="text" 
-                                            value={banner.link || ""} 
-                                            onChange={(e) => handleUpdateBannerLink(banner.id, e.target.value)}
-                                            placeholder="ยังไม่ได้ใส่ลิงก์"
-                                            className="text-sm font-medium text-slate-700 bg-transparent border-b border-transparent focus:border-green-300 outline-none w-full placeholder:text-slate-300"
-                                        />
-                                    </div>
-                                </div>
+                                <div className="w-full md:w-48 shrink-0">
+    <ImageUploader 
+        label="รูปภาพแบนเนอร์" 
+        currentImage={banner.image} 
+        onImageUpload={(url) => handleUpdateBannerImage(banner.id, url)}
+        folderName="banners"
+    />
+</div>
+
+<div className="flex-1 min-w-0 w-full space-y-2 self-start mt-6 md:mt-0">
+    <label className="text-[10px] font-bold text-slate-400 uppercase">ลิงก์ปลายทาง (แก้ไขแล้วคลิกพื้นที่ว่างเพื่อบันทึก)</label>
+    <div className="flex items-center gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200 focus-within:border-green-400 focus-within:ring-1 focus-within:ring-green-400 transition-all">
+        <LinkIcon size={14} className="text-slate-400"/>
+        <input 
+            type="text" 
+            value={banner.link || ""} 
+            onChange={(e) => handleBannerLinkChange(banner.id, e.target.value)}
+            onBlur={(e) => handleSaveBannerLink(banner.id, e.target.value)}
+            placeholder="วางลิงก์ที่นี่ เช่น /product/123"
+            className="text-sm text-slate-700 bg-transparent border-none outline-none w-full placeholder:text-slate-300"
+        />
+    </div>
+</div>
                                 <div className="flex items-center gap-2 self-end md:self-center">
                                     <button 
                                         onClick={() => handleToggleBannerStatus(banner.id, banner.published)} 
