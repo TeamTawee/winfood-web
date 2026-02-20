@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { db, auth, storage } from "../../lib/firebase"; 
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, orderBy, query } from "firebase/firestore"; 
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDoc, getDocs, orderBy, query } from "firebase/firestore"; 
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { 
@@ -49,9 +49,23 @@ function ImageUploader({ label, currentImage, onImageUpload, folderName = "gener
     }
   };
 
-  const handleRemoveImage = (e) => {
+  const handleRemoveImage = async (e) => {
     e.stopPropagation();
-    if (!confirm("ต้องการลบรูปภาพนี้ออกใช่ไหม?")) return;
+    if (!confirm("ต้องการลบรูปภาพนี้ออกใช่ไหม? (ไฟล์รูปภาพจะถูกลบออกจากเซิร์ฟเวอร์ด้วย)")) return;
+    
+    // ถ้ามีรูปเดิมอยู่ พยายามลบรูปเดิมออกจาก Firebase Storage ก่อน
+    if (currentImage && currentImage.includes('firebase')) {
+      try {
+        // ดึง Path ของไฟล์จาก URL
+        const fileUrl = new URL(currentImage);
+        const filePath = decodeURIComponent(fileUrl.pathname.split('/o/')[1].split('?alt=media')[0]);
+        const fileRef = ref(storage, filePath);
+        await deleteObject(fileRef); // สั่งลบไฟล์จริง
+      } catch (err) {
+        console.error("Error deleting old image:", err);
+      }
+    }
+
     onImageUpload("");
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -162,7 +176,9 @@ export default function AdminPage() {
   const [heroImage, setHeroImage] = useState(""); 
   const [order, setOrder] = useState(0); 
   const [status, setStatus] = useState("active");
-  const [isBestSeller, setIsBestSeller] = useState(false); 
+  const [isBestSeller, setIsBestSeller] = useState(false);
+  const [loadedUpdatedAt, setLoadedUpdatedAt] = useState(null); // เช็คเวลาอัปเดตล่าสุด 
+  const [initialSnapshot, setInitialSnapshot] = useState(""); // 🟢 เพิ่มตัวนี้สำหรับเช็คว่ามีการแก้ไขไหม
   
   const [blocks, setBlocks] = useState([]); 
   const [itemsList, setItemsList] = useState([]);
@@ -260,10 +276,29 @@ export default function AdminPage() {
         order: Number(order), status: status, isBestSeller, contentBlocks: blocks, updatedAt: new Date() 
     };
     try {
-      if (editId) { await updateDoc(doc(db, "products", editId), payload); } 
-      else { await addDoc(collection(db, "products"), { ...payload, createdAt: new Date() }); }
+      if (editId) { 
+          // 🟢 เพิ่มระบบเช็คการเซฟชนกันตรงนี้
+          const docRef = doc(db, "products", editId);
+          const snap = await getDoc(docRef);
+          
+          if (snap.exists()) {
+              const currentDbUpdatedAt = snap.data().updatedAt ? snap.data().updatedAt.toMillis() : 0;
+              // ถ้าเวลาใน Database ใหม่กว่าเวลาที่เราโหลดมา แสดงว่ามีคนเซฟตัดหน้าไปแล้ว
+              if (loadedUpdatedAt > 0 && currentDbUpdatedAt > loadedUpdatedAt) {
+                  setGlobalLoading(false);
+                  const forceSave = confirm("⚠️ มีแอดมินคนอื่นแก้ไขข้อมูลสินค้านี้ไปแล้วระหว่างที่คุณกำลังทำงานอยู่!\n\nหากคุณกด OK ข้อมูลของคุณจะไปทับข้อมูลของพวกเขา\nหากกด Cancel ให้รีเฟรชหน้าเพื่อดูข้อมูลล่าสุดก่อน");
+                  if (!forceSave) return; // ยกเลิกการเซฟ
+                  setGlobalLoading(true); // ถ้ากดยืนยันจะเซฟทับ ให้โหลดต่อ
+              }
+          }
+          
+          await updateDoc(docRef, payload); 
+      } 
+      else { 
+          await addDoc(collection(db, "products"), { ...payload, createdAt: new Date() }); 
+      }
       await fetchData();
-      backToList(); 
+      backToList(true); // 🟢 สั่งให้กลับไปหน้าแรกได้เลย ไม่ต้องเตือนเพราะเซฟเสร็จแล้ว
     } catch (e) { alert(e.message); } 
     finally { setGlobalLoading(false); }
   };
@@ -271,28 +306,61 @@ export default function AdminPage() {
   const handleCreateNew = () => {
       resetForm();
       const maxOrder = itemsList.length > 0 ? Math.max(...itemsList.map(i => i.order || 0)) : 0;
-      setOrder(maxOrder + 1);
+      const newOrder = maxOrder + 1;
+      setOrder(newOrder);
+      
+      // 🟢 ถ่าย Snapshot ค่าเริ่มต้น (ว่างเปล่า)
+      setInitialSnapshot(JSON.stringify({ title: "", category: "", shortDesc: "", coverImage: "", heroImage: "", order: newOrder, status: "active", isBestSeller: false, blocks: [] }));
+      
       setViewMode("edit");
   };
 
   const handleEditClick = (item) => {
-      setEditId(item.id); setTitle(item.title); setCategory(item.category);
-      setShortDesc(item.shortDesc); setCoverImage(item.image); setHeroImage(item.heroImage || "");
-      setOrder(item.order); 
-      setStatus(item.status || (item.published ? 'active' : 'hidden')); 
-      setIsBestSeller(item.isBestSeller || false); 
-      setBlocks((item.contentBlocks || []).map(normalizeBlock));
+      // ดึงค่ามาพักไว้ก่อนเพื่อความชัวร์เวลาเอาไปเทียบ
+      const t = item.title || "";
+      const c = item.category || "";
+      const sd = item.shortDesc || "";
+      const ci = item.image || "";
+      const hi = item.heroImage || "";
+      const o = item.order || 0;
+      const s = item.status || (item.published ? 'active' : 'hidden');
+      const ibs = item.isBestSeller || false;
+      const blks = (item.contentBlocks || []).map(normalizeBlock);
+
+      setEditId(item.id); setTitle(t); setCategory(c);
+      setShortDesc(sd); setCoverImage(ci); setHeroImage(hi);
+      setOrder(o); setStatus(s); setIsBestSeller(ibs); 
+      setBlocks(blks);
+      setLoadedUpdatedAt(item.updatedAt ? item.updatedAt.toMillis() : 0);
+      
+      // 🟢 ถ่าย Snapshot ค่าดั้งเดิมตอนดึงข้อมูลมา
+      setInitialSnapshot(JSON.stringify({ title: t, category: c, shortDesc: sd, coverImage: ci, heroImage: hi, order: o, status: s, isBestSeller: ibs, blocks: blks }));
+
       setViewMode("edit");
   };
 
-  const backToList = () => {
+  const backToList = (forceBypass = false) => {
+      // เช็คว่าถ้าไม่ใช่การโดนสั่งย้อนกลับอัตโนมัติจากการกดเซฟ
+      if (forceBypass !== true) {
+          // ดึงค่าบนหน้าจอปัจจุบันมาแพ็ครวมกัน
+          const currentSnapshot = JSON.stringify({ title, category, shortDesc, coverImage, heroImage, order, status, isBestSeller, blocks });
+          
+          // ถ้าข้อมูลปัจจุบัน "ไม่เหมือน" กับตอนแรกที่เปิดหน้ามา ค่อยเด้งเตือน
+          if (currentSnapshot !== initialSnapshot) {
+              const confirmLeave = window.confirm(
+                  "⚠️ คำเตือน: คุณมีการแก้ไขข้อมูลค้างไว้!\n\nหากคุณย้อนกลับโดยไม่กด 'บันทึก' ข้อมูลที่แก้ไขจะสูญหายทั้งหมด\nคุณต้องการย้อนกลับใช่หรือไม่?"
+              );
+              if (!confirmLeave) return;
+          }
+      }
+
       resetForm();
       setViewMode("list");
   };
 
   const resetForm = () => { 
       setEditId(null); setTitle(""); setCategory(""); setShortDesc(""); setCoverImage(""); setHeroImage("");
-      setBlocks([]); setStatus('active'); setIsBestSeller(false); 
+      setBlocks([]); setStatus('active'); setIsBestSeller(false); setLoadedUpdatedAt(null);
   };
 
   const handleMoveItem = async (col, items, idx, dir) => {
