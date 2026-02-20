@@ -101,7 +101,7 @@ export default function HomePage() {
         const banQ = query(collection(db, "banners"), where("published", "==", true), orderBy("order", "asc"));
         const banSnap = await getDocs(banQ);
         setBanners(banSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      } catch (e) { console.error(e); } finally { setTimeout(() => setLoading(false), 800); }
+      } catch (e) { console.error(e); } finally { setLoading(false); }
     };
     fetchData();
   }, []);

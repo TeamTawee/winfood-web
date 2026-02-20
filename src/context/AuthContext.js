@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
       }
       // หน่วงเวลาปิดหน้านี้ 1 วินาที เพื่อให้เห็น Logo Branding สวยๆ ก่อนเข้าเว็บ
-      setTimeout(() => setLoading(false), 1000);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
