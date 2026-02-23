@@ -178,10 +178,17 @@ function Footer() {
         </div>
       </div>
       
-      {/* Copyright */}
-      <div className="max-w-7xl mx-auto pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-medium text-gray-500 uppercase tracking-widest text-center md:text-left">
-        <span>© 2026 WINFOOD INDUSTRY CORPORATION.</span>
-        <span>{t.footer.rights}</span>
+      {/* Copyright & Legal */}
+      <div className="max-w-7xl mx-auto pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-medium text-gray-500 tracking-widest text-center md:text-left">
+        <div className="uppercase">
+            <span>© {new Date().getFullYear()} WINFOOD INDUSTRY CORPORATION. </span>
+            <span>{t.footer.rights}</span>
+        </div>
+        <div className="flex gap-4 md:gap-6">
+            {/* 🟢 เปลี่ยน href จาก "#" เป็นลิงก์หน้าจริง และใช้ <Link> */}
+            <Link href="/privacy" className="hover:text-white transition-colors">{t.footer.privacyPolicy || "Privacy Policy"}</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">{t.footer.termsOfService || "Terms of Service"}</Link>
+        </div>
       </div>
     </footer>
   );

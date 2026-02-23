@@ -85,6 +85,13 @@ export default function ProductDetail({ params }) {
              <h1 className="text-4xl md:text-7xl font-black text-white leading-tight uppercase drop-shadow-2xl">{item.title}</h1>
              <p className="text-slate-200 mt-4 max-w-lg text-sm md:text-lg font-light drop-shadow-md">{item.shortDesc}</p>
         </div>
+
+        {/* ข้อความประกอบภาพโฆษณา (มุมขวาล่างของรูป Hero) */}
+        <div className="absolute bottom-4 right-4 md:right-8 z-30 opacity-40">
+            <span className="text-slate-500 text-[9px] md:text-[10px] italic font-light tracking-wide drop-shadow-md">
+                {t?.productPage?.adImageDisclaimer}
+            </span>
+        </div>
       </div>
 
       {/* CONTENT BLOCKS */}
@@ -148,7 +155,7 @@ export default function ProductDetail({ params }) {
                     onClick={(e) => e.stopPropagation()}
                 >
                     <button onClick={() => setSelectedBlock(null)} className="absolute top-4 right-4 z-20 p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 transition-colors"><X size={20}/></button>
-                    <div className="w-full md:w-5/12 bg-slate-50 p-8 flex items-center justify-center shrink-0 md:order-last min-h-62.5 md:min-h-full relative">
+                    <div className="w-full md:w-5/12 bg-slate-50 p-8 flex flex-col items-center justify-center shrink-0 md:order-last min-h-62.5 md:min-h-full relative">
                         <div className="relative w-40 h-40 md:w-64 md:h-64 bg-white rounded-full shadow-inner border border-slate-100 flex items-center justify-center overflow-hidden">
                             {(selectedBlock.popupImage || selectedBlock.mediaSrc) ? (
                                 <div className="relative w-full h-full"> 
@@ -156,6 +163,11 @@ export default function ProductDetail({ params }) {
                                 </div>
                             ) : (<PackageOpen size={40} className="text-slate-300"/>)}
                         </div>
+                        
+                        {/* ข้อความประกอบภาพโฆษณา (ใต้รูปภาพใน Popup) */}
+                        <span className="text-[10px] text-slate-400 italic font-light mt-6 tracking-wide">
+                            {t?.productPage?.adImageDisclaimer}
+                        </span>
                     </div>
                     <div className="w-full md:w-7/12 p-8 md:p-12 overflow-y-auto bg-white flex-1">
                         <div className="mb-6">
