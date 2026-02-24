@@ -1,23 +1,37 @@
+// src/app/privacy/page.js
 "use client";
 import { useLanguage } from "../../context/LanguageContext";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation"; // 🟢 1. เพิ่ม import useRouter
+import { ArrowLeft } from "lucide-react"; // 🟢 2. เพิ่ม import ArrowLeft
 
 export default function PrivacyPolicyPage() {
   const { lang } = useLanguage();
+  const router = useRouter(); // 🟢 3. เรียกใช้งาน router
 
   return (
     <div className="min-h-screen bg-slate-50 pt-50 md:pt-55 pb-20 px-4 md:px-6 font-sans text-slate-800">
       <motion.div 
         initial={{ opacity: 0, y: 20 }} 
         animate={{ opacity: 1, y: 0 }} 
-        className="max-w-4xl mx-auto bg-white p-8 md:p-16 rounded-[2rem] shadow-xl border border-slate-100"
+        className="max-w-4xl mx-auto bg-white p-8 md:p-16 rounded-4xl shadow-xl border border-slate-100"
       >
+        {/* 🟢 4. เพิ่มปุ่มย้อนกลับตรงนี้ (อยู่เหนือ Title) */}
+        <button 
+          onClick={() => router.back()} 
+          className="mb-8 flex items-center gap-2 text-slate-500 hover:text-green-600 transition-colors font-bold text-sm group w-fit cursor-pointer"
+        >
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+          {lang === 'th' ? 'กลับ' : 'Back'}
+        </button>
+
         {lang === 'th' ? (
           <div className="space-y-6">
             <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-8 border-b pb-4">นโยบายความเป็นส่วนตัว (Privacy Policy)</h1>
             <p className="text-slate-600 leading-relaxed">
               บริษัท วินฟู้ด อินดัสตรี คอร์ปอเรชั่น จำกัด ("บริษัท", "เรา", "พวกเรา" หรือ "ของเรา") ให้ความสำคัญกับการคุ้มครองข้อมูลส่วนบุคคลของคุณ นโยบายความเป็นส่วนตัวฉบับนี้อธิบายถึงวิธีการที่เรารวบรวม ใช้ และปกป้องข้อมูลที่คุณมอบให้เมื่อเข้าชมเว็บไซต์ของเรา
             </p>
+            {/* ... เนื้อหาส่วนอื่นๆ คงเดิม ... */}
             
             <h2 className="text-xl font-bold text-slate-800 mt-8">1. ข้อมูลที่เรารวบรวม</h2>
             <ul className="list-disc pl-6 text-slate-600 space-y-2">

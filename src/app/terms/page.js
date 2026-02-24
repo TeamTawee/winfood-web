@@ -1,17 +1,30 @@
+// src/app/terms/page.js
 "use client";
 import { useLanguage } from "../../context/LanguageContext";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation"; // 🟢 1. เพิ่ม import useRouter
+import { ArrowLeft } from "lucide-react"; // 🟢 2. เพิ่ม import ArrowLeft
 
 export default function TermsOfServicePage() {
   const { lang } = useLanguage();
+  const router = useRouter(); // 🟢 3. เรียกใช้งาน router
 
   return (
     <div className="min-h-screen bg-slate-50 pt-50 md:pt-55 pb-20 px-4 md:px-6 font-sans text-slate-800">
       <motion.div 
         initial={{ opacity: 0, y: 20 }} 
         animate={{ opacity: 1, y: 0 }} 
-        className="max-w-4xl mx-auto bg-white p-8 md:p-16 rounded-[2rem] shadow-xl border border-slate-100"
+        className="max-w-4xl mx-auto bg-white p-8 md:p-16 rounded-4xl shadow-xl border border-slate-100"
       >
+        {/* 🟢 4. เพิ่มปุ่มย้อนกลับตรงนี้ (อยู่เหนือ Title) */}
+        <button 
+          onClick={() => router.back()} 
+          className="mb-8 flex items-center gap-2 text-slate-500 hover:text-green-600 transition-colors font-bold text-sm group w-fit cursor-pointer"
+        >
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+          {lang === 'th' ? 'กลับ' : 'Back'}
+        </button>
+
         {lang === 'th' ? (
           <div className="space-y-6">
             <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-8 border-b pb-4">ข้อกำหนดและเงื่อนไข (Terms of Service)</h1>
