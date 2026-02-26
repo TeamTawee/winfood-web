@@ -71,7 +71,7 @@ export default function ProductDetail({ params }) {
                 <div className="w-full h-full bg-slate-800 opacity-50"></div>
              )}
         </motion.div>
-        <div className="absolute inset-0 bg-linear-to-t from-white via-transparent to-black/60"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-white via-transparent to-[#374151]/10"></div>
         
         <div className="absolute top-48 left-6 z-30 flex gap-3">
              <Link href="/#products" className="bg-white/10 backdrop-blur-md border border-white/20 pl-4 pr-6 py-3 rounded-full text-white text-sm font-bold flex gap-2 items-center hover:bg-white hover:text-slate-900 transition-all shadow-lg group">
@@ -83,7 +83,7 @@ export default function ProductDetail({ params }) {
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-50 text-center px-4">
              <span className="text-white/90 font-black tracking-[0.3em] uppercase text-xs md:text-sm mb-4 border border-white/30 px-4 py-1.5 rounded-full backdrop-blur-md">{item.category || "Collection"}</span>
              <h1 className="text-4xl md:text-7xl font-black text-white leading-tight uppercase drop-shadow-2xl">{item.title}</h1>
-<p className="text-slate-200 mt-4 max-w-lg text-xs md:text-base font-light drop-shadow-md whitespace-pre-wrap break-words">{item.shortDesc}</p>
+<p className="text-slate-200 mt-4 max-w-lg text-xs md:text-base font-light drop-shadow-md whitespace-pre-wrap wrap-break-word">{item.shortDesc}</p>
         </div>
 
         {/* ข้อความประกอบภาพโฆษณา (มุมขวาล่างของรูป Hero) */}
@@ -131,8 +131,8 @@ export default function ProductDetail({ params }) {
                                     <div className="w-full h-full flex items-center justify-center bg-slate-50 rounded-lg"><PackageOpen className="text-slate-300" size={24} /></div>
                                   )}
                               </div>
-                              <h4 className="font-bold text-sm text-slate-900 group-hover:text-green-600 transition-colors break-words">{prod.title}</h4>
-<p className="text-[10px] md:text-xs text-slate-400 mt-1 font-light whitespace-pre-wrap break-words">{prod.shortDesc}</p>
+                              <h4 className="font-bold text-sm text-slate-900 group-hover:text-green-600 transition-colors wrap-break-word">{prod.title}</h4>
+<p className="text-[10px] md:text-xs text-slate-400 mt-1 font-light whitespace-pre-wrap wrap-break-word">{prod.shortDesc}</p>
                           </Link>
                       ))}
                   </div>

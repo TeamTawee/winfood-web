@@ -256,8 +256,8 @@ export default function HomePage() {
                                     <div className="flex items-start justify-between gap-4 mb-2">
                                         <span className="text-[10px] font-bold text-green-600 uppercase tracking-wider bg-green-50 px-2 py-1 rounded">{item.category}</span>
                                     </div>
-                                    <h3 className="text-base md:text-lg font-bold text-slate-900 group-hover:text-green-600 transition-colors break-words">{item.title}</h3>
-<p className="text-xs md:text-sm text-slate-400 mt-2 font-light whitespace-pre-wrap break-words">{item.shortDesc}</p>
+                                    <h3 className="text-base md:text-lg font-bold text-slate-900 group-hover:text-green-600 transition-colors wrap-break-word">{item.title}</h3>
+<p className="text-xs md:text-sm text-slate-400 mt-2 font-light whitespace-pre-wrap wrap-break-word">{item.shortDesc}</p>
                                 </div>
                             </Link>
                         </motion.div>
