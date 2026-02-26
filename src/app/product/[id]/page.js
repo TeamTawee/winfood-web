@@ -83,7 +83,7 @@ export default function ProductDetail({ params }) {
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-50 text-center px-4">
              <span className="text-white/90 font-black tracking-[0.3em] uppercase text-xs md:text-sm mb-4 border border-white/30 px-4 py-1.5 rounded-full backdrop-blur-md">{item.category || "Collection"}</span>
              <h1 className="text-4xl md:text-7xl font-black text-white leading-tight uppercase drop-shadow-2xl">{item.title}</h1>
-             <p className="text-slate-200 mt-4 max-w-lg text-sm md:text-lg font-light drop-shadow-md">{item.shortDesc}</p>
+<p className="text-slate-200 mt-4 max-w-lg text-xs md:text-base font-light drop-shadow-md whitespace-pre-wrap break-words">{item.shortDesc}</p>
         </div>
 
         {/* ข้อความประกอบภาพโฆษณา (มุมขวาล่างของรูป Hero) */}
@@ -118,10 +118,10 @@ export default function ProductDetail({ params }) {
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
                       {otherProducts.map(prod => (
-                          <Link href={`/product/${prod.id}`} key={prod.id} className={`group bg-white rounded-2xl p-4 border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${prod.status === 'out_of_stock' ? 'grayscale opacity-70' : ''}`}>
-                              <div className="relative aspect-square rounded-xl overflow-hidden bg-white mb-3 p-2 border border-slate-50">
-                                  {prod.status === 'out_of_stock' ? (
-                                      <div className="absolute top-2 right-2 z-10 bg-slate-800 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow-sm">OUT OF STOCK</div>
+                          <Link href={`/product/${prod.id}`} key={prod.id} className={`group bg-white rounded-2xl p-4 border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
+    <div className="relative aspect-square rounded-xl overflow-hidden bg-white mb-3 p-2 border border-slate-50">
+        {prod.status === 'out_of_stock' ? (
+            <div className="absolute top-2 right-2 z-10 bg-orange-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow-sm">MADE TO ORDER</div>
                                   ) : prod.isBestSeller ? (
                                       <div className="absolute top-2 right-2 z-10 bg-red-600 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow-sm">BEST SELLER</div>
                                   ) : null}
@@ -131,8 +131,8 @@ export default function ProductDetail({ params }) {
                                     <div className="w-full h-full flex items-center justify-center bg-slate-50 rounded-lg"><PackageOpen className="text-slate-300" size={24} /></div>
                                   )}
                               </div>
-                              <h4 className="font-bold text-sm text-slate-900 group-hover:text-green-600 transition-colors line-clamp-1">{prod.title}</h4>
-                              <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-1">{prod.shortDesc}</p>
+                              <h4 className="font-bold text-sm text-slate-900 group-hover:text-green-600 transition-colors break-words">{prod.title}</h4>
+<p className="text-[10px] md:text-xs text-slate-400 mt-1 font-light whitespace-pre-wrap break-words">{prod.shortDesc}</p>
                           </Link>
                       ))}
                   </div>
@@ -268,9 +268,9 @@ function ProductGrid({ items, onSelect }) {
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12 mb-12">
             {items.map((block, i) => (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} key={i} className={`group cursor-pointer flex flex-col items-center text-center gap-4 ${block.status === 'out_of_stock' ? 'grayscale opacity-60' : ''}`} onClick={() => onSelect(block)}>
-                    <div className="relative w-full aspect-square bg-transparent rounded-2xl overflow-visible transition-transform duration-500 group-hover:-translate-y-2">
-                        {block.status === 'out_of_stock' ? (<div className="absolute top-0 right-0 z-10 bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg shadow-sm">OUT OF STOCK</div>) : block.isBestSeller ? (<div className="absolute top-0 right-0 z-10 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg shadow-sm">BEST SELLER</div>) : null}
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} key={i} className={`group cursor-pointer flex flex-col items-center text-center gap-4`} onClick={() => onSelect(block)}>
+    <div className="relative w-full aspect-square bg-transparent rounded-2xl overflow-visible transition-transform duration-500 group-hover:-translate-y-2">
+        {block.status === 'out_of_stock' ? (<div className="absolute top-0 right-0 z-10 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg shadow-sm">MADE TO ORDER</div>) : block.isBestSeller ? (<div className="absolute top-0 right-0 z-10 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg shadow-sm">BEST SELLER</div>) : null}
                         {block.mediaSrc ? (<Image src={block.mediaSrc} alt={block.heading} fill className="object-contain drop-shadow-xl" sizes="(max-width: 768px) 50vw, 25vw"/>) : (<div className="w-full h-full bg-slate-50 rounded-2xl flex flex-col items-center justify-center text-slate-300 gap-2"><PackageOpen size={32}/><span className="text-[10px] font-bold uppercase tracking-widest">No Image</span></div>)}
                     </div>
                     <div className="space-y-1 px-2">

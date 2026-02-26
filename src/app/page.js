@@ -240,9 +240,9 @@ export default function HomePage() {
                     {products.map(item => (
                         <motion.div layout key={item.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
                             <Link href={`/product/${item.id}`} className="group block h-full">
-                                <div className={`bg-white rounded-3xl p-6 border border-slate-100 hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1 relative overflow-hidden ${item.status === 'out_of_stock' ? 'grayscale opacity-70' : ''}`}>
-                                    {item.status === 'out_of_stock' ? (
-                                        <div className="absolute top-4 right-4 z-10 bg-slate-800 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">OUT OF STOCK</div>
+                                <div className={`bg-white rounded-3xl p-6 border border-slate-100 hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1 relative overflow-hidden`}>
+    {item.status === 'out_of_stock' ? (
+        <div className="absolute top-4 right-4 z-10 bg-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">MADE TO ORDER</div>
                                     ) : item.isBestSeller ? (
                                         <div className="absolute top-4 right-4 z-10 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">BEST SELLER</div>
                                     ) : null}
@@ -256,8 +256,8 @@ export default function HomePage() {
                                     <div className="flex items-start justify-between gap-4 mb-2">
                                         <span className="text-[10px] font-bold text-green-600 uppercase tracking-wider bg-green-50 px-2 py-1 rounded">{item.category}</span>
                                     </div>
-                                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-green-600 transition-colors line-clamp-1">{item.title}</h3>
-                                    <p className="text-sm text-slate-400 mt-2 line-clamp-2 font-light">{item.shortDesc}</p>
+                                    <h3 className="text-base md:text-lg font-bold text-slate-900 group-hover:text-green-600 transition-colors break-words">{item.title}</h3>
+<p className="text-xs md:text-sm text-slate-400 mt-2 font-light whitespace-pre-wrap break-words">{item.shortDesc}</p>
                                 </div>
                             </Link>
                         </motion.div>

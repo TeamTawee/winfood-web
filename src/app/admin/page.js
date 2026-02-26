@@ -127,7 +127,7 @@ function ImageUploader({ label, currentImage, onImageUpload, folderName = "gener
 function StatusSelector({ status, onChange }) {
   const states = {
     active: { label: "พร้อมขาย (Active)", color: "bg-green-100 text-green-700 border-green-200", icon: <Eye size={14}/> },
-    out_of_stock: { label: "ของหมด (Out of Stock)", color: "bg-orange-100 text-orange-700 border-orange-200", icon: <AlertCircle size={14}/> },
+    out_of_stock: { label: "สั่งผลิต (Made to Order)", color: "bg-orange-100 text-orange-700 border-orange-200", icon: <AlertCircle size={14}/> },
     hidden: { label: "ซ่อน (Hidden)", color: "bg-slate-100 text-slate-500 border-slate-200", icon: <EyeOff size={14}/> }
   };
 
@@ -142,7 +142,7 @@ function StatusSelector({ status, onChange }) {
         className={`appearance-none text-[10px] font-bold uppercase px-3 py-1.5 rounded-lg border outline-none cursor-pointer ${currentStyle.color}`}
       >
         <option value="active">พร้อมขาย (แสดงปกติ)</option>
-        <option value="out_of_stock">ของหมด (แสดงสีเทา)</option>
+        <option value="out_of_stock">สั่งผลิต (แสดงป้ายสีส้ม)</option>
         <option value="hidden">ซ่อนสินค้า (ไม่แสดง)</option>
       </select>
     </div>
