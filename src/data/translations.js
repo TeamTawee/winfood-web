@@ -31,7 +31,7 @@ export const translations = {
       discover: "Discover More",
       otherTitle: "Other Products",
       viewAll: "View All",
-      // 🟢 เพิ่มบรรทัดนี้
+      attributesTitle: "Detail",
       adImageDisclaimer: "*Images are for advertising purposes only."
     },
     footer: {
@@ -76,7 +76,7 @@ export const translations = {
       discover: "ค้นพบเพิ่มเติม",
       otherTitle: "สินค้าอื่นๆ ที่น่าสนใจ",
       viewAll: "ดูทั้งหมด",
-      // 🟢 เพิ่มบรรทัดนี้
+      attributesTitle: "รายละเอียดสินค้า",
       adImageDisclaimer: "*ภาพเพื่อการโฆษณาเท่านั้น"
     },
     footer: {

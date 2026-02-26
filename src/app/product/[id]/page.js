@@ -177,7 +177,9 @@ export default function ProductDetail({ params }) {
                         <div className="space-y-6">
                             {selectedBlock.attributes?.length > 0 && (
                                 <div className="space-y-3">
-                                    <p className="text-slate-700 font-bold text-xs flex items-center gap-2 uppercase tracking-wider mb-2"><Info size={14}/> Ingredients</p>
+                                    <p className="text-slate-700 font-bold text-xs flex items-center gap-2 uppercase tracking-wider mb-2">
+    <Info size={14}/> {t?.productPage?.attributesTitle || "Detail"}
+</p>
                                     <div className="space-y-2">
                                         {selectedBlock.attributes.map((attr, idx) => (
                                             <div key={idx} className="flex justify-between items-end text-sm pb-1 border-b border-slate-50">

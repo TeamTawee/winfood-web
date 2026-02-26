@@ -662,7 +662,7 @@ export default function AdminPage() {
                                                     </div>
                                                     <div className="bg-green-50/50 p-5 rounded-2xl border border-green-100 space-y-4">
                                                         <div className="space-y-2">
-                                                            <label className="text-[10px] font-bold text-green-700 uppercase">ส่วนประกอบ (Ingredients)</label>
+                                                            <label className="text-[10px] font-bold text-green-700 uppercase">รายละเอียดสินค้า (แบบข้อ)</label>
                                                             {block.attributes.map((attr, attrIdx) => (
                                                                 <div key={attrIdx} className="flex gap-2 items-center"><input type="text" value={attr.key} onChange={e => updateAttrInBlock(index, attrIdx, 'key', e.target.value)} placeholder="ชื่อ (Key)" className="flex-1 p-2 bg-white rounded-lg text-xs outline-none shadow-sm"/><input type="text" value={attr.value} onChange={e => updateAttrInBlock(index, attrIdx, 'value', e.target.value)} placeholder="ค่า (Value)" className="w-20 p-2 bg-white rounded-lg text-xs outline-none shadow-sm"/><button onClick={() => removeAttrFromBlock(index, attrIdx)} className="text-red-400 hover:text-red-600"><X size={14}/></button></div>
                                                             ))}
