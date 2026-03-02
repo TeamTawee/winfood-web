@@ -170,6 +170,7 @@ export default function AdminPage() {
 
   // --- States Product ---
   const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
   const [category, setCategory] = useState("");
   const [shortDesc, setShortDesc] = useState("");
   const [coverImage, setCoverImage] = useState(""); 
@@ -271,10 +272,17 @@ export default function AdminPage() {
 
   const handleProductSubmit = async () => {
     setGlobalLoading(true);
+    
+    // 🟢 ทำความสะอาด Slug ป้องกันการพิมพ์เว้นวรรคหรือตัวพิมพ์ใหญ่ (ถ้าไม่กรอก จะสร้างจาก title อัตโนมัติ)
+    const finalSlug = slug.trim() 
+      ? slug.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') 
+      : title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
     const payload = { 
-        title, category, shortDesc, image: coverImage, heroImage: heroImage, 
+        title, slug: finalSlug, category, shortDesc, image: coverImage, heroImage: heroImage,  // 🟢 เพิ่ม slug เข้าไปใน payload
         order: Number(order), status: status, isBestSeller, contentBlocks: blocks, updatedAt: new Date() 
     };
+    // ... โค้ดส่วนที่เหลือของฟังก์ชันนี้เหมือนเดิม
     try {
       if (editId) { 
           // 🟢 เพิ่มระบบเช็คการเซฟชนกันตรงนี้
@@ -309,8 +317,8 @@ export default function AdminPage() {
       const newOrder = maxOrder + 1;
       setOrder(newOrder);
       
-      // 🟢 ถ่าย Snapshot ค่าเริ่มต้น (ว่างเปล่า)
-      setInitialSnapshot(JSON.stringify({ title: "", category: "", shortDesc: "", coverImage: "", heroImage: "", order: newOrder, status: "active", isBestSeller: false, blocks: [] }));
+      // 🟢 เพิ่ม slug: "" เข้าไปใน Snapshot เริ่มต้น
+      setInitialSnapshot(JSON.stringify({ title: "", slug: "", category: "", shortDesc: "", coverImage: "", heroImage: "", order: newOrder, status: "active", isBestSeller: false, blocks: [] }));
       
       setViewMode("edit");
   };
@@ -318,6 +326,7 @@ export default function AdminPage() {
   const handleEditClick = (item) => {
       // ดึงค่ามาพักไว้ก่อนเพื่อความชัวร์เวลาเอาไปเทียบ
       const t = item.title || "";
+      const sl = item.slug || ""; // 🟢 ดึงค่า slug มาจากฐานข้อมูล
       const c = item.category || "";
       const sd = item.shortDesc || "";
       const ci = item.image || "";
@@ -327,14 +336,21 @@ export default function AdminPage() {
       const ibs = item.isBestSeller || false;
       const blks = (item.contentBlocks || []).map(normalizeBlock);
 
-      setEditId(item.id); setTitle(t); setCategory(c);
-      setShortDesc(sd); setCoverImage(ci); setHeroImage(hi);
-      setOrder(o); setStatus(s); setIsBestSeller(ibs); 
+      setEditId(item.id); 
+      setTitle(t); 
+      setSlug(sl); // 🟢 อัปเดต state ของ slug
+      setCategory(c);
+      setShortDesc(sd); 
+      setCoverImage(ci); 
+      setHeroImage(hi);
+      setOrder(o); 
+      setStatus(s); 
+      setIsBestSeller(ibs); 
       setBlocks(blks);
       setLoadedUpdatedAt(item.updatedAt ? item.updatedAt.toMillis() : 0);
       
-      // 🟢 ถ่าย Snapshot ค่าดั้งเดิมตอนดึงข้อมูลมา
-      setInitialSnapshot(JSON.stringify({ title: t, category: c, shortDesc: sd, coverImage: ci, heroImage: hi, order: o, status: s, isBestSeller: ibs, blocks: blks }));
+      // 🟢 เพิ่ม slug: sl เข้าไปใน Snapshot
+      setInitialSnapshot(JSON.stringify({ title: t, slug: sl, category: c, shortDesc: sd, coverImage: ci, heroImage: hi, order: o, status: s, isBestSeller: ibs, blocks: blks }));
 
       setViewMode("edit");
   };
@@ -342,8 +358,8 @@ export default function AdminPage() {
   const backToList = (forceBypass = false) => {
       // เช็คว่าถ้าไม่ใช่การโดนสั่งย้อนกลับอัตโนมัติจากการกดเซฟ
       if (forceBypass !== true) {
-          // ดึงค่าบนหน้าจอปัจจุบันมาแพ็ครวมกัน
-          const currentSnapshot = JSON.stringify({ title, category, shortDesc, coverImage, heroImage, order, status, isBestSeller, blocks });
+          // 🟢 เพิ่มตัวแปร slug เข้ามาใน snapshot ปัจจุบันเพื่อเอาไปเทียบ
+          const currentSnapshot = JSON.stringify({ title, slug, category, shortDesc, coverImage, heroImage, order, status, isBestSeller, blocks });
           
           // ถ้าข้อมูลปัจจุบัน "ไม่เหมือน" กับตอนแรกที่เปิดหน้ามา ค่อยเด้งเตือน
           if (currentSnapshot !== initialSnapshot) {
@@ -359,8 +375,17 @@ export default function AdminPage() {
   };
 
   const resetForm = () => { 
-      setEditId(null); setTitle(""); setCategory(""); setShortDesc(""); setCoverImage(""); setHeroImage("");
-      setBlocks([]); setStatus('active'); setIsBestSeller(false); setLoadedUpdatedAt(null);
+      setEditId(null); 
+      setTitle(""); 
+      setSlug(""); // 🟢 เคลียร์ค่า slug กลับเป็นค่าว่าง
+      setCategory(""); 
+      setShortDesc(""); 
+      setCoverImage(""); 
+      setHeroImage("");
+      setBlocks([]); 
+      setStatus('active'); 
+      setIsBestSeller(false); 
+      setLoadedUpdatedAt(null);
   };
 
   const handleMoveItem = async (col, items, idx, dir) => {
@@ -538,7 +563,17 @@ export default function AdminPage() {
 
                             <div className="p-6 md:p-10 max-w-4xl mx-auto space-y-8">
                                 <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-6">
-                                    <div className="space-y-1"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">ชื่อหมวดหมู่ (Category Title)</label><input type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full text-3xl font-black border-b-2 border-slate-100 focus:border-green-500 outline-none py-2 bg-transparent placeholder:text-slate-200" placeholder="ชื่อหมวดหมู่..."/></div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-1">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">ชื่อหมวดหมู่ / ชื่อสินค้าหลัก</label>
+            <input type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full text-2xl md:text-3xl font-black border-b-2 border-slate-100 focus:border-green-500 outline-none py-2 bg-transparent placeholder:text-slate-200" placeholder="ชื่อสินค้า..."/>
+        </div>
+        {/* 🟢 เพิ่มช่องกรอกลิงก์ Slug ตรงนี้ */}
+        <div className="space-y-1">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">URL (Slug) - ตัวพิมพ์เล็กภาษาอังกฤษ</label>
+            <input type="text" value={slug} onChange={e => setSlug(e.target.value)} className="w-full text-lg border-b-2 border-slate-100 focus:border-green-500 outline-none py-2 bg-transparent placeholder:text-slate-200 mt-1 md:mt-2 text-green-600" placeholder="เช่น premium-jasmine-rice (เว้นว่างไว้ระบบจะสร้างให้)"/>
+        </div>
+    </div>
                                     
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                                         <ImageUploader 

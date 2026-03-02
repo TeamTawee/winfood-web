@@ -4,7 +4,7 @@ import { motion, useScroll, useSpring, useTransform, AnimatePresence } from "fra
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Loader2, Info, X, PackageOpen, ChevronRight, ArrowRight } from "lucide-react";
-import { doc, getDoc, collection, getDocs, query, orderBy } from "firebase/firestore"; 
+import { doc, getDoc, collection, getDocs, query, orderBy, where, limit } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 import { useLanguage } from "../../../context/LanguageContext";
 
@@ -27,13 +27,36 @@ export default function ProductDetail({ params }) {
     if (!id) return;
     const fetchData = async () => {
         try {
-            const docRef = doc(db, "products", id);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                setItem({ id: docSnap.id, ...data });
-                document.title = `${data.title} | Winfood Product`; 
+            let productData = null;
+            let productId = null;
 
+            // 1. ลองค้นหาจากช่อง "slug" ก่อน
+            const slugQuery = query(collection(db, "products"), where("slug", "==", id), limit(1));
+            const slugSnap = await getDocs(slugQuery);
+
+            if (!slugSnap.empty) {
+                // ถ้าเจอจาก Slug
+                productData = slugSnap.docs[0].data();
+                productId = slugSnap.docs[0].id;
+            } else {
+                // 2. ถ้าไม่เจอจาก Slug ให้ลองดึงด้วย Document ID (รองรับลิงก์เก่าหรือสินค้าที่ไม่ได้ตั้ง slug)
+                try {
+                    const docRef = doc(db, "products", id);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        productData = docSnap.data();
+                        productId = docSnap.id;
+                    }
+                } catch (err) {
+                    console.log("Invalid Document ID format, skipping...");
+                }
+            }
+
+            if (productData) {
+                setItem({ id: productId, ...productData });
+                document.title = `${productData.title} | Winfood Product`; 
+
+                // ดึงสินค้าอื่นๆ เหมือนเดิม
                 const q = query(collection(db, "products"), orderBy("order", "asc")); 
                 const querySnapshot = await getDocs(q);
                 const others = querySnapshot.docs
@@ -43,7 +66,7 @@ export default function ProductDetail({ params }) {
                         if (!status) status = dData.published ? 'active' : 'hidden';
                         return { id: d.id, ...dData, status };
                     })
-                    .filter(p => p.id !== id && p.status !== 'hidden')
+                    .filter(p => p.id !== productId && p.status !== 'hidden')
                     .slice(0, 5); 
 
                 setOtherProducts(others);
@@ -118,7 +141,7 @@ export default function ProductDetail({ params }) {
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
                       {otherProducts.map(prod => (
-                          <Link href={`/product/${prod.id}`} key={prod.id} className={`group bg-white rounded-2xl p-4 border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
+                          <Link href={`/product/${prod.slug || prod.id}`} key={prod.id} className={`group bg-white rounded-2xl p-4 border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
     <div className="relative aspect-square rounded-xl overflow-hidden bg-white mb-3 p-2 border border-slate-50">
         {prod.status === 'out_of_stock' ? (
             <div className="absolute top-2 right-2 z-10 bg-orange-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow-sm">MADE TO ORDER</div>

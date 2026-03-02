@@ -239,7 +239,7 @@ export default function HomePage() {
                 <AnimatePresence mode="popLayout">
                     {products.map(item => (
                         <motion.div layout key={item.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-                            <Link href={`/product/${item.id}`} className="group block h-full">
+                            <Link href={`/product/${item.slug || item.id}`} className="group block h-full">
                                 <div className={`bg-white rounded-3xl p-6 border border-slate-100 hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1 relative overflow-hidden`}>
     {item.status === 'out_of_stock' ? (
         <div className="absolute top-4 right-4 z-10 bg-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">MADE TO ORDER</div>
