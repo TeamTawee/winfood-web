@@ -182,21 +182,25 @@ export default function HomePage() {
             {banners.length > 0 ? (
                 <AnimatePresence> 
                     <motion.div key={currentBanner} initial={{ opacity: 0 }} animate={{ opacity: 1, zIndex: 1 }} exit={{ opacity: 0, zIndex: 0 }} transition={{ duration: 1.5, ease: "easeInOut" }} className="absolute inset-0 w-full h-full">
-                        <div className="absolute inset-0 bg-black/5 z-10 pointer-events-none"></div>
-                        {banners[currentBanner].image ? (
-                            banners[currentBanner].link ? (
-                                <Link href={banners[currentBanner].link} className="block w-full h-full cursor-pointer relative z-20">
-                                    <Image src={banners[currentBanner].image} alt="Banner" fill className="object-cover" priority />
-                                </Link>
-                            ) : (
-                                <Image src={banners[currentBanner].image} alt="Banner" fill className="object-cover" priority />
-                            )
-                        ) : (
-                            <div className="w-full h-full bg-slate-200 flex items-center justify-center">
-                                <ImageIcon className="text-slate-400" size={64} />
-                            </div>
-                        )}
-                    </motion.div>
+    <div className="absolute inset-0 bg-black/5 z-10 pointer-events-none"></div>
+    {banners[currentBanner].image ? (
+        /* 🟢 เพิ่มการตรวจสอบว่าลิงก์ต้องมีข้อความจริงๆ ไม่ใช่แค่ช่องว่าง หรือเครื่องหมาย # */
+        banners[currentBanner].link && banners[currentBanner].link.trim() !== "" && banners[currentBanner].link.trim() !== "#" ? (
+            <Link href={banners[currentBanner].link} target="_blank" rel="noopener noreferrer" className="block w-full h-full cursor-pointer relative z-20">
+                <Image src={banners[currentBanner].image} alt="Banner" fill className="object-cover" priority />
+            </Link>
+        ) : (
+            /* 🟢 ถ้าไม่มีลิงก์ ก็แสดงแค่รูปเฉยๆ ไม่ต้องมี Link ครอบ */
+            <div className="block w-full h-full relative z-20">
+                <Image src={banners[currentBanner].image} alt="Banner" fill className="object-cover" priority />
+            </div>
+        )
+    ) : (
+        <div className="w-full h-full bg-slate-200 flex items-center justify-center relative z-20">
+            <ImageIcon className="text-slate-400" size={64} />
+        </div>
+    )}
+</motion.div>
                 </AnimatePresence>
             ) : (
                 <div className="relative w-full h-full">
