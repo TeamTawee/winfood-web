@@ -37,7 +37,7 @@ function Navbar() {
   return (
     <>
       <nav 
-        className="fixed w-full z-100 bg-white/95 backdrop-blur-md border-b border-slate-100 py-4 px-6 md:px-12 flex justify-between items-center transition-all"
+        className="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 py-4 px-6 md:px-12 flex justify-between items-center"
         style={{ transform: 'translate3d(0,0,0)', WebkitTransform: 'translate3d(0,0,0)' }}
       >
         <Link href="/#hero" className="relative z-110">
@@ -66,7 +66,7 @@ function Navbar() {
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 bg-white z-100 flex flex-col items-center justify-center gap-8 lg:hidden pt-20"
+            className="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center gap-8 lg:hidden pt-20"
           >
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href} onClick={() => setIsOpen(false)} className="text-2xl font-bold text-slate-800 tracking-widest uppercase">

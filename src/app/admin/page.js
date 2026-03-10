@@ -188,6 +188,18 @@ export default function AdminPage() {
   
   const [newBannerImage, setNewBannerImage] = useState("");
   const [newBannerLink, setNewBannerLink] = useState("");
+  
+  const triggerUpdate = async () => {
+    try {
+      await fetch('/api/revalidate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tag: 'home-data' }),
+      });
+    } catch (error) {
+      console.error('Error triggering update:', error);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -226,6 +238,7 @@ export default function AdminPage() {
     try {
         await deleteDoc(doc(db, "products", id));
         await fetchData();
+        await triggerUpdate();
     } catch (err) { alert(err.message); }
     finally { setGlobalLoading(false); }
   };
@@ -306,6 +319,7 @@ export default function AdminPage() {
           await addDoc(collection(db, "products"), { ...payload, createdAt: new Date() }); 
       }
       await fetchData();
+      await triggerUpdate();
       backToList(true); // 🟢 สั่งให้กลับไปหน้าแรกได้เลย ไม่ต้องเตือนเพราะเซฟเสร็จแล้ว
     } catch (e) { alert(e.message); } 
     finally { setGlobalLoading(false); }
@@ -401,6 +415,7 @@ export default function AdminPage() {
         await updateDoc(doc(db, col, newItems[idx].id), { order: idx + 1 });
         await updateDoc(doc(db, col, newItems[targetIndex].id), { order: targetIndex + 1 });
         if (col === 'products') await fetchData(); else await fetchBanners();
+        await triggerUpdate(); // 🟢 สั่งล้างแคช
     } catch (e) { console.error(e); }
     finally { setGlobalLoading(false); }
   };
@@ -410,6 +425,7 @@ export default function AdminPage() {
       try { 
           await updateDoc(doc(db, col, id), { status: newStatus }); 
           if (col === 'products') await fetchData(); else await fetchBanners(); 
+          await triggerUpdate(); // 🟢 สั่งล้างแคช
       } catch (e) { console.error(e); }
       finally { setGlobalLoading(false); }
   };
@@ -424,26 +440,28 @@ export default function AdminPage() {
           });
           setNewBannerImage(""); setNewBannerLink("");
           await fetchBanners();
+          await triggerUpdate(); // 🟢 สั่งล้างแคช
       } catch (e) { console.error(e); } 
       finally { setGlobalLoading(false); }
   };
 
   const handleBannerLinkChange = (id, newLink) => {
-      // 1. อัปเดตหน้าจอก่อนทันที (พิมพ์ลื่น วางลิงก์ได้ปกติ)
       setBanners(banners.map(b => b.id === id ? { ...b, link: newLink } : b));
   };
 
   const handleSaveBannerLink = async (id, newLink) => {
-      // 2. เซฟลง Database เมื่อคลิกเมาส์ออกนอกช่อง (onBlur) ลดภาระเซิร์ฟเวอร์
-      try { await updateDoc(doc(db, "banners", id), { link: newLink }); } catch (e) { console.error(e); }
+      try { 
+          await updateDoc(doc(db, "banners", id), { link: newLink }); 
+          await triggerUpdate(); // 🟢 สั่งล้างแคช
+      } catch (e) { console.error(e); }
   };
 
   const handleUpdateBannerImage = async (id, newImage) => {
-      // 3. ฟังก์ชันสำหรับเปลี่ยนรูปแบนเนอร์เดิม
       setGlobalLoading(true);
       try {
           await updateDoc(doc(db, "banners", id), { image: newImage });
           await fetchBanners();
+          await triggerUpdate(); // 🟢 สั่งล้างแคช
       } catch (e) { console.error(e); }
       finally { setGlobalLoading(false); }
   };
@@ -453,6 +471,7 @@ export default function AdminPage() {
       try { 
           await updateDoc(doc(db, "banners", id), { published: !currentStatus }); 
           await fetchBanners(); 
+          await triggerUpdate(); // 🟢 สั่งล้างแคช
       } catch (e) { console.error(e); }
       finally { setGlobalLoading(false); }
   };
@@ -460,7 +479,11 @@ export default function AdminPage() {
   const handleDeleteBanner = async (id) => { 
       if (!confirm("ต้องการลบแบนเนอร์นี้ใช่ไหม?")) return; 
       setGlobalLoading(true);
-      try { await deleteDoc(doc(db, "banners", id)); await fetchBanners(); } catch (e) { console.error(e); }
+      try { 
+          await deleteDoc(doc(db, "banners", id)); 
+          await fetchBanners(); 
+          await triggerUpdate(); // 🟢 สั่งล้างแคช
+      } catch (e) { console.error(e); }
       finally { setGlobalLoading(false); }
   };
 

@@ -54,23 +54,26 @@ export const AuthProvider = ({ children }) => {
 
   // 🟢 แก้ไขตรงนี้: เปลี่ยนจาก Text ธรรมดา เป็นหน้า Logo Loader
   if (loading) {
-    return (
-      <div className="fixed inset-0 bg-white z-9999 flex flex-col items-center justify-center space-y-6">
-        <div className="relative w-40 h-20 animate-pulse">
-            <Image 
-                src="/images/Logo cl.png" 
-                alt="Winfood Loading" 
-                fill 
-                className="object-contain" 
-                priority 
-            />
+    const isSpecialPage = pathname.startsWith("/admin") || pathname === "/login";
+    if (isSpecialPage) {
+      return (
+        <div className="fixed inset-0 bg-white z-9999 flex flex-col items-center justify-center space-y-6">
+          <div className="relative w-40 h-20 animate-pulse">
+              <Image 
+                  src="/images/Logo cl.png" 
+                  alt="Winfood Loading" 
+                  fill 
+                  className="object-contain" 
+                  priority 
+              />
+          </div>
+          <div className="flex items-center gap-3 text-slate-400 text-xs font-bold uppercase tracking-[0.2em]">
+              <Loader2 className="animate-spin text-green-600" size={18} />
+              Loading Experience...
+          </div>
         </div>
-        <div className="flex items-center gap-3 text-slate-400 text-xs font-bold uppercase tracking-[0.2em]">
-            <Loader2 className="animate-spin text-green-600" size={18} />
-            Loading Experience...
-        </div>
-      </div>
-    );
+      );
+    }
   }
 
   return (
