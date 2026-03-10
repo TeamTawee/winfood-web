@@ -285,9 +285,9 @@ export default function HomePage() {
                 <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight leading-tight">
                     {t?.aboutPreview?.title || "Connecting Global Quality to Local Markets."}
                 </h2>
-                <p className="text-slate-500 text-lg leading-relaxed font-light">
-                   {t?.aboutPreview?.desc || "Winfood Industry Corporation is an international importing and exporting company..."}
-                </p>
+                <p className="text-slate-500 text-lg leading-relaxed font-light whitespace-pre-line text-balance">
+    {t?.aboutPreview?.desc || "..."}
+</p>
                 <Link href="/about" className="inline-flex items-center gap-2 text-slate-900 font-bold hover:text-green-600 tracking-wide text-sm border-b-2 border-slate-900 hover:border-green-600 pb-1 pt-4 transition-all uppercase">
                     {t?.aboutPreview?.link || "READ OUR STORY"}
                 </Link>
