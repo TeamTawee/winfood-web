@@ -282,7 +282,7 @@ export default function HomePage() {
                 <span className="text-green-600 font-bold tracking-widest text-xs uppercase">
                     {t?.aboutPreview?.tag || "Who We Are"}
                 </span>
-                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+                <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight leading-tight">
                     {t?.aboutPreview?.title || "Connecting Global Quality to Local Markets."}
                 </h2>
                 <p className="text-slate-500 text-lg leading-relaxed font-light">

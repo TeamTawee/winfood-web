@@ -8,23 +8,44 @@ export const translations = {
       button: "Explore Products"
     },
     aboutPreview: {
-      tag: "Who We Are",
-      title: "Connecting Global Quality to Local Markets.",
-      desc: "Winfood Industry Corporation is an international importing and exporting company based in Thailand, focusing on supply products to our customers worldwide.",
+      tag: "ESTABLISHED APRIL 2015",
+      title: "WIN Food Industry Corporation",
+      desc: "An international trading company based in Thailand with over a decade of experience. We are a trusted specialist in the Import and Export of quality food products, bridging the gap between global producers and regional markets.",
       link: "READ OUR STORY"
     },
     aboutPage: {
-      tag: "About Company",
-      subTitle: "Global Standards,",
-      subTitleGreen: "Local Excellence.",
+      tag: "ESTABLISHED APRIL 2015",
+      subTitle: "WIN Food Industry",
+      subTitleGreen: "Corporation",
       storyTitle: "Our Story",
-      storyDesc: "WIN Food Industry Corporation is a leading international import and export company based in Thailand. We specialize in supplying high-quality agriculture products to the global market while sourcing the best ingredients from around the world for our customers in South East Asia.",
-      val1Title: "Quality Assurance",
-      val1Desc: "Our core mission is delivering quality food products. From raw materials to finished goods, we ensure our products meet both customer satisfaction and international food quality standards.",
-      val2Title: "Import & Export",
-      val2Desc: "Beyond exporting premium Thai products like Jasmine Rice, we import high-quality foods for markets in Thailand and neighboring ASEAN countries, including Myanmar, Vietnam, Laos, and Cambodia.",
-      val3Title: "Professional Team",
-      val3Desc: "We take pride in our professional team. Our competent staff is dedicated to doing their best to ensure you receive only the highest quality products and services."
+      storyDesc: "WIN Food Industry Corporation has emerged as an international trading company based in Thailand. With over a decade of experience navigating the complexities of global trade, we have solidified our reputation as a trusted specialist in the Import and Export of quality food products.",
+      
+      // ส่วน 3 บล็อกหลัก
+      expertiseTitle: "Our Core Expertise",
+      expertiseItems: [
+        { label: "Agricultural Products", text: "Exporting the finest seasonal produce, grains, and raw materials, ensuring every shipment meets international safety and quality benchmarks." },
+        { label: "Beverage Ingredients", text: "A comprehensive range of quality bases, concentrates, and specialized ingredients for the beverage industry." },
+        { label: "Seasoning & Flavouring", text: "Curating a diverse selection of seasonings and sauces that define the taste of excellence." },
+        { label: "Strategic Logistics", text: "Managing intricate supply chains to ensure freshness, safety standards, and seamless delivery." }
+      ],
+      
+      reachTitle: "Comprehensive Market Reach",
+      reachItems: [
+        { label: "Modern Trade", text: "Partnering with leading retail giants and hypermarkets to supply food products for mass-market availability." },
+        { label: "Traditional Trade", text: "Supporting local wholesalers and traditional outlets to ensure our quality products are accessible in the community." },
+        { label: "Retail & Online Sales", text: "Adapting to the digital era with a strong presence in E-commerce and retail channels, delivering directly to the doorstep." },
+        { label: "Catering & Chain Stores", text: "Providing consistent, high-volume supply and specialized ingredients for restaurant chains and professional catering." }
+      ],
+
+      marketingTitle: "Marketing & Brand Activation",
+      marketingItems: [
+        { label: "Exhibitions", text: "Showcasing at leading international and local food exhibitions to connect with global partners." },
+        { label: "In-Store Activations", text: "Driving consumer engagement through Taste & Trial activities to build brand trust." },
+        { label: "Digital Marketing", text: "Utilizing data-driven digital marketing to reach target audiences across social media and E-commerce." },
+        { label: "KOL Collaborations", text: "Partnering with top food bloggers and chefs to create authentic content and drive sales." }
+      ],
+      
+      finalQuote: "At WIN Food Industry, we don't just supply ingredients; we bridge the world’s flavors with South East Asia’s culinary potential, driven by a decade of excellence and a commitment to quality."
     },
     productPage: {
       back: "Back to Products",
@@ -53,23 +74,43 @@ export const translations = {
       button: "ดูสินค้าของเรา"
     },
     aboutPreview: {
-      tag: "รู้จักเรา",
-      title: "เชื่อมโยงคุณภาพระดับโลก สู่ตลาดท้องถิ่น",
-      desc: "วินฟู้ด อินดัสตรี คอร์ปอเรชั่น บริษัทนำเข้าและส่งออกในประเทศไทย มุ่งเน้นการจัดหาผลิตภัณฑ์อาหารคุณภาพสูงเพื่อตอบโจทย์ความต้องการของลูกค้าทั่วโลก",
+      tag: "ตั้งแต่ปี พ.ศ. 2558",
+      title: "บริษัท วินฟู้ด อินดัสตรี คอร์ปอเรชั่น จำกัด",
+      desc: "บริษัทการค้าระหว่างประเทศในไทยที่มีประสบการณ์กว่าทศวรรษ เราคือผู้เชี่ยวชาญที่ได้รับความไว้วางใจในการนำเข้าและส่งออกผลิตภัณฑ์อาหารคุณภาพ ทำหน้าที่เชื่อมโยงผู้ผลิตระดับโลกสู่ตลาดในภูมิภาคอย่างครบวงจร",
       link: "อ่านเรื่องราวของเรา"
     },
     aboutPage: {
-      tag: "เกี่ยวกับบริษัท",
-      subTitle: "มาตรฐานระดับสากล",
-      subTitleGreen: "สู่ความเป็นเลิศในท้องถิ่น",
+      tag: "ทศวรรษแห่งความเชี่ยวชาญ",
+      subTitle: "วินฟู้ด อินดัสตรี",
+      subTitleGreen: "คอร์ปอเรชั่น",
       storyTitle: "เรื่องราวของเรา",
-      storyDesc: "บริษัท วินฟู้ด อินดัสตรี คอร์ปอเรชั่น จำกัด คือผู้นำด้านการนำเข้าและส่งออกผลิตภัณฑ์อาหารในประเทศไทย เราเชี่ยวชาญการจัดส่งสินค้าคุณภาพ สู่ตลาดโลก พร้อมทั้งคัดสรรวัตถุดิบที่ดีที่สุดจากนานาประเทศเพื่อส่งมอบให้แก่ลูกค้าในไทยและภูมิภาคเอเชียตะวันออกเฉียงใต้",
-      val1Title: "การรับประกันคุณภาพ",
-      val1Desc: "ภารกิจหัวใจสำคัญของเราคือการส่งมอบอาหารคุณภาพเยี่ยม ตั้งแต่การคัดเลือกวัตถุดิบจนถึงสินค้าสำเร็จรูป เรามุ่งมั่นเพื่อให้สินค้าตอบโจทย์ทั้งความพึงพอใจของลูกค้าและมาตรฐานคุณภาพอาหารระดับสากล",
-      val2Title: "การนำเข้าและส่งออก",
-      val2Desc: "นอกเหนือจากการส่งออกสินค้าไทยเกรดพรีเมียม อาทิ ข้าวหอมมะลิ เรายังนำเข้าอาหารคุณภาพสูงเพื่อจำหน่ายในตลาดไทยและประเทศเพื่อนบ้านในอาเซียน ได้แก่ พม่า เวียดนาม ลาว และกัมพูชา",
-      val3Title: "ทีมงานมืออาชีพ",
-      val3Desc: "เราภูมิใจในทีมงานมืออาชีพที่เปี่ยมด้วยศักยภาพ และทุ่มเททำงานอย่างเต็มที่เพื่อให้มั่นใจว่าคุณจะได้รับสินค้าและบริการที่มีคุณภาพสูงสุดจากเรา"
+      storyDesc: "บริษัท วินฟู้ด อินดัสตรี คอร์ปอเรชั่น จำกัด ก่อตั้งขึ้นในเดือนเมษายน 2558 ในฐานะบริษัทการค้าระหว่างประเทศชั้นนำในประเทศไทย ด้วยประสบการณ์กว่า 10 ปีในแวดวงการค้าระดับโลก เราได้สร้างความเชื่อมั่นในฐานะผู้เชี่ยวชาญด้านการนำเข้าและส่งออกผลิตภัณฑ์อาหารคุณภาพ",
+      
+      expertiseTitle: "ความเชี่ยวชาญหลักของเรา",
+      expertiseItems: [
+        { label: "Agricultural Products", text: "การส่งออกผลผลิตทางการเกษตร ธัญพืช และวัตถุดิบชั้นเลิศตามฤดูกาล ตามมาตรฐานความปลอดภัยและคุณภาพระดับสากล" },
+        { label: "Beverage Ingredients", text: "วัตถุดิบเครื่องดื่มครบวงจร ทั้งส่วนผสมพื้นฐาน และวัตถุดิบเฉพาะทางสำหรับอุตสาหกรรมเครื่องดื่มทุกระดับ" },
+        { label: "Seasoning & Flavouring", text: "คัดสรรเครื่องปรุงรสและซอสหลากหลายประเภท เพื่อสร้างสรรค์เอกลักษณ์แห่งรสชาติอันเป็นเลิศ" },
+        { label: "Strategic Logistics", text: "การบริหารจัดการซัพพลายเชนที่ซับซ้อน เพื่อความสดใหม่ มาตรฐานความปลอดภัย และการจัดส่งที่ไร้รอยต่อ" }
+      ],
+      
+      reachTitle: "การเข้าถึงตลาดที่ครอบคลุม",
+      reachItems: [
+        { label: "Modern Trade", text: "พันธมิตรกับห้างค้าปลีกชั้นนำและไฮเปอร์มาร์เก็ต เพื่อกระจายสินค้าสู่กลุ่มผู้บริโภคในวงกว้าง" },
+        { label: "Traditional Trade", text: "สนับสนุนผู้ค้าส่งและร้านค้าปลีกดั้งเดิม เพื่อให้สินค้าคุณภาพเข้าถึงทุกชุมชน" },
+        { label: "Retail & Online Sales", text: "ปรับตัวสู่ยุคดิจิทัลด้วยช่องทาง E-commerce ที่แข็งแกร่ง พร้อมส่งตรงถึงมือผู้บริโภคยุคใหม่" },
+        { label: "Catering & Chain Stores", text: "บริการวัตถุดิบปริมาณมากและส่วนผสมเฉพาะทาง สำหรับเชนร้านอาหารและธุรกิจจัดเลี้ยงมืออาชีพ" }
+      ],
+
+      marketingTitle: "การตลาดและการสร้างแบรนด์",
+      marketingItems: [
+        { label: "Exhibitions", text: "ร่วมแสดงในงานนิทรรศการอาหารระดับนานาชาติและในประเทศ เพื่อเชื่อมต่อกับพันธมิตรทั่วโลก" },
+        { label: "In-Store Activations", text: "สร้างการมีส่วนร่วมผ่านกิจกรรมชิมและทดลองใช้ ณ ห้างสรรพสินค้าชั้นนำ เพื่อสร้างความเชื่อมั่นในแบรนด์" },
+        { label: "Digital Marketing", text: "การตลาดดิจิทัลที่ขับเคลื่อนด้วยข้อมูล เพื่อเข้าถึงกลุ่มเป้าหมายในทุกแพลตฟอร์มออนไลน์" },
+        { label: "KOL Collaborations", text: "ร่วมกับเชฟและอินฟลูเอนเซอร์ชั้นนำ เพื่อสร้างสรรค์เนื้อหาที่น่าเชื่อถือและส่งเสริมการขาย" }
+      ],
+
+      finalQuote: "วินฟู้ด อินดัสตรี มุ่งมั่นเชื่อมโยงรสชาติระดับโลกเข้ากับศักยภาพทางอาหารของเอเชียตะวันออกเฉียงใต้ โดยส่งมอบวัตถุดิบคุณภาพเยี่ยม ด้วยความเป็นเลิศและความทุ่มเทที่สั่งสมมาตลอดหนึ่งทศวรรษ"
     },
     productPage: {
       back: "กลับไปหน้ารวมสินค้า",
