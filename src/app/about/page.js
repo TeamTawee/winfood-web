@@ -28,6 +28,11 @@ export default function AboutPage() {
     }
   ];
 
+  const fadeUpVariants = {
+    hidden: { opacity: 0, scale: 0.8, y: 20 },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  };
+
   return (
     // 🟢 เปลี่ยน overflow-hidden เป็น overflow-x-clip เพื่อไม่ให้บัคกับ Sticky
     <div className="font-sans text-[#1d1d1f] bg-white pt-40 md:pt-56 pb-24 overflow-x-clip"> 
@@ -57,39 +62,42 @@ export default function AboutPage() {
 
             {/* Collage of 6 Images */}
             <motion.div 
-              initial={{ opacity: 0, x: 30 }} 
-              animate={{ opacity: 1, x: 0 }} 
-              transition={{ duration: 0.8, delay: 0.2 }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={{
+                visible: { transition: { staggerChildren: 0.15 } } // 🟢 สั่งให้แสดงทีละรูป ห่างกัน 0.15 วิ
+              }}
               className="relative z-10"
             >
                 <div className="grid grid-cols-12 gap-3 md:gap-4">
                   {/* Left Column (5/12 width) */}
                   <div className="col-span-5 space-y-3 md:space-y-4 pt-8 md:pt-16">
-                    <div className="relative aspect-3/4 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
+                    <motion.div variants={fadeUpVariants} className="relative aspect-3/4 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
                       <Image src="/images/abouthead-3.png" alt="About Image 3" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                    </div>
-                    <div className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
+                    </motion.div>
+                    <motion.div variants={fadeUpVariants} className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
                       <Image src="/images/abouthead-5.png" alt="About Image 5" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                    </div>
+                    </motion.div>
                   </div>
                   
                   {/* Right Column (7/12 width) */}
                   <div className="col-span-7 space-y-3 md:space-y-4">
-                    <div className="relative aspect-4/3 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
+                    <motion.div variants={fadeUpVariants} className="relative aspect-4/3 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
                       <Image src="/images/abouthead-1.png" alt="About Image 1" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                    </div>
+                    </motion.div>
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
-                      <div className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group bg-white">
+                      <motion.div variants={fadeUpVariants} className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group bg-white">
                         <Image src="/images/abouthead-2.png" alt="About Image 2" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                      </div>
-                      <div className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
+                      </motion.div>
+                      <motion.div variants={fadeUpVariants} className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
                         <Image src="/images/abouthead-4.png" alt="About Image 4" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                      </div>
+                      </motion.div>
                     </div>
                     {/* Added Image 6 */}
-                    <div className="relative aspect-4/3 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
+                    <motion.div variants={fadeUpVariants} className="relative aspect-4/3 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
                       <Image src="/images/abouthead-6.png" alt="About Image 6" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                    </div>
+                    </motion.div>
                   </div>
                 </div>
             </motion.div>
