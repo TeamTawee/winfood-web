@@ -87,7 +87,7 @@ export default function ProductDetail({ params }) {
 
       {/* HERO SECTION + NAVIGATION */}
       <div className="relative h-[95vh] overflow-hidden bg-slate-900">
-        <motion.div style={{ y: heroY }} className="absolute inset-0">
+        <motion.div style={{ y: heroY }} className="absolute inset-0 will-change-transform transform-gpu">
              {heroImageSrc ? (
                 <Image src={heroImageSrc} alt={item.title} fill priority className="object-cover opacity-50 scale-105" />
              ) : (

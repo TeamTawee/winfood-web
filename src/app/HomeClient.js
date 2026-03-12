@@ -13,7 +13,7 @@ function FloatingItem({ src, className, speed = 1, rotateRange = 5 }) {
   const yScroll = useTransform(smoothProgress, [0, 1], [0, speed * 250]);
   
   return (
-    <motion.div style={{ y: yScroll }} className={`absolute pointer-events-none z-0 ${className}`}>
+    <motion.div style={{ y: yScroll }} className={`absolute pointer-events-none z-0 will-change-transform transform-gpu ${className}`}>
        <motion.div animate={{ y: [0, -10, 0], rotate: [0, rotateRange, 0] }} transition={{ duration: 8 + Math.random() * 4, repeat: Infinity, ease: "easeInOut" }} className="relative w-full h-full drop-shadow-xl">
          <Image src={src} alt="prop" fill className="object-contain" />
        </motion.div>
@@ -66,7 +66,7 @@ export default function HomeClient({ initialProducts, initialBanners }) {
     <div className="overflow-x-hidden pt-20 font-sans animate-in fade-in duration-700">
       
       {/* --- HERO SECTION --- */}
-      <section id="hero" className="relative pt-16 pb-0 px-6 bg-white overflow-hidden min-h-150 flex items-center">
+      <section id="hero" className="relative pt-32 md:pt-40 pb-0 px-6 bg-white overflow-hidden min-h-150 flex items-center scroll-mt-24">
         <FloatingItem src="/images/leaf-1.png" className="top-10 right-[5%] w-32 h-32 blur-[1.5px] rotate-45 opacity-70" speed={-2} rotateRange={15} />
         <FloatingItem src="/images/ice.png" className="bottom-32 left-[2%] w-20 h-20 blur-[2px] opacity-60 rotate-12" speed={1.2} rotateRange={10} />
         <FloatingItem src="/images/fruit-1.png" className="top-[20%] left-[10%] w-16 h-16 opacity-40 blur-[2px] rotate-[-20deg]" speed={0.8} />
@@ -146,7 +146,7 @@ export default function HomeClient({ initialProducts, initialBanners }) {
       </section>
 
       {/* --- PRODUCTS SECTION --- */}
-      <section id="products" className="py-24 bg-[#F9F9FB] relative overflow-hidden">
+      <section id="products" className="py-24 bg-[#F9F9FB] relative overflow-hidden scroll-mt-32">
         <FloatingItem src="/images/fruit-1.png" className="absolute top-10 -left-10 w-48 h-48 opacity-20 blur-[2px] rotate-90" speed={0.5} />
         <FloatingItem src="/images/ice.png" className="absolute bottom-20 right-5 w-32 h-32 opacity-10 blur-[3px]" speed={-0.3} rotateRange={20} />
         <FloatingItem src="/images/leaf-1.png" className="absolute top-[40%] right-[10%] w-20 h-20 opacity-30 blur-[1px] rotate-120" speed={0.7} />
