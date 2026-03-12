@@ -213,7 +213,7 @@ export default function HomeClient({ initialProducts, initialBanners }) {
             <div className="flex-1 relative w-full h-64 md:h-96">
                  <ScrollParallax speed={0.2}>
                     <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
-                        <Image src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1000" alt="About Preview" fill className="object-cover hover:scale-105 transition-transform duration-1000" />
+                        <Image src="https://firebasestorage.googleapis.com/v0/b/winfood-web.firebasestorage.app/o/banners%2Fallpro2%20Large.jpeg?alt=media&token=38218720-d1a8-4a7a-8ce0-b9ba72fec35c" alt="About Preview" fill className="object-cover hover:scale-105 transition-transform duration-1000" />
                     </div>
                  </ScrollParallax>
                  <div className="absolute -bottom-10 -left-10 w-40 h-40 md:w-56 md:h-56 z-20 hidden md:block">

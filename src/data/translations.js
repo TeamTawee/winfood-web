@@ -45,7 +45,7 @@ export const translations = {
         { label: "KOL Collaborations", text: "Partnering with top food bloggers and chefs to create authentic content and drive sales." }
       ],
       
-      finalQuote: "At WIN Food Industry, we don't just supply ingredients; we bridge the world’s flavors with South East Asia’s culinary potential, driven by a decade of excellence and a commitment to quality."
+      finalQuote: "At WIN Food Industry, we don't just supply ingredients, we bridge the world’s flavors with South East Asia’s culinary potential, driven by a decade of excellence and a commitment to quality."
     },
     productPage: {
       back: "Back to Products",
