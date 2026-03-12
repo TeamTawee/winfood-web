@@ -160,7 +160,7 @@ export default function AboutPage() {
              
              <Quote size={40} className="mx-auto text-green-500/30 mb-4" />
              <h2 className="text-2xl md:text-3xl font-light italic text-slate-800 leading-relaxed tracking-tight">
-               "{t.aboutPage.finalQuote}"
+               {t.aboutPage.finalQuote}
              </h2>
              
              <div className="w-full flex justify-center mt-8">
