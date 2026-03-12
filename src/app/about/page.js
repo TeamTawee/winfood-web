@@ -76,7 +76,7 @@ export default function AboutPage() {
                     <motion.div 
                       variants={fadeUpVariants} 
                       whileHover={{ scale: 1.02 }} // 🟢 ขยายกล่องขึ้น 2% ตอนเอาเมาส์ชี้ (คอม)
-                      whileTap={{ scale: 0.95 }}   // 🟢 ยุบกล่องลง 5% ตอนใช้นิ้วจิ้ม (มือถือ)
+                      whileTap={{ scale: 0.90 }}   // 🟢 ยุบกล่องลง 5% ตอนใช้นิ้วจิ้ม (มือถือ)
                       transition={{ duration: 0.4, ease: "easeOut" }}
                       className="relative aspect-3/4 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
                     >
@@ -85,7 +85,7 @@ export default function AboutPage() {
                     <motion.div 
                       variants={fadeUpVariants} 
                       whileHover={{ scale: 1.02 }} 
-                      whileTap={{ scale: 0.95 }}
+                      whileTap={{ scale: 0.90 }}
                       transition={{ duration: 0.4, ease: "easeOut" }} 
                       className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
                     >
@@ -98,7 +98,7 @@ export default function AboutPage() {
                     <motion.div 
                       variants={fadeUpVariants} 
                       whileHover={{ scale: 1.02 }} 
-                      whileTap={{ scale: 0.95 }} 
+                      whileTap={{ scale: 0.90 }} 
                       transition={{ duration: 0.4, ease: "easeOut" }}
                       className="relative aspect-4/3 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
                     >
@@ -108,7 +108,7 @@ export default function AboutPage() {
                       <motion.div 
                         variants={fadeUpVariants} 
                         whileHover={{ scale: 1.02 }} 
-                        whileTap={{ scale: 0.95 }} 
+                        whileTap={{ scale: 0.90 }} 
                         transition={{ duration: 0.4, ease: "easeOut" }}
                         className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 bg-white cursor-pointer"
                       >
@@ -117,7 +117,7 @@ export default function AboutPage() {
                       <motion.div 
                         variants={fadeUpVariants} 
                         whileHover={{ scale: 1.02 }} 
-                        whileTap={{ scale: 0.95 }} 
+                        whileTap={{ scale: 0.90 }} 
                         transition={{ duration: 0.4, ease: "easeOut" }}
                         className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
                       >
@@ -128,7 +128,7 @@ export default function AboutPage() {
                     <motion.div 
                       variants={fadeUpVariants} 
                       whileHover={{ scale: 1.02 }} 
-                      whileTap={{ scale: 0.95 }} 
+                      whileTap={{ scale: 0.90 }} 
                       transition={{ duration: 0.4, ease: "easeOut" }}
                       className="relative aspect-4/3 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
                     >
@@ -169,7 +169,6 @@ export default function AboutPage() {
                         <h3 className="text-3xl font-black text-slate-900 uppercase tracking-tight leading-tight relative z-10">
                           {section.title}
                         </h3>
-                        <div className="w-12 h-1 bg-slate-200 mt-6 rounded-full hidden md:block relative z-10"></div>
                     </div>
                     
                     {/* Right Column: Content Items in a grid */}
