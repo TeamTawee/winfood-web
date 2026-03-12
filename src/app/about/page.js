@@ -66,37 +66,73 @@ export default function AboutPage() {
               whileInView="visible"
               viewport={{ once: true, margin: "-50px" }}
               variants={{
-                visible: { transition: { staggerChildren: 0.15 } } // 🟢 สั่งให้แสดงทีละรูป ห่างกัน 0.15 วิ
+                visible: { transition: { staggerChildren: 0.15 } }
               }}
               className="relative z-10"
             >
                 <div className="grid grid-cols-12 gap-3 md:gap-4">
                   {/* Left Column (5/12 width) */}
                   <div className="col-span-5 space-y-3 md:space-y-4 pt-8 md:pt-16">
-                    <motion.div variants={fadeUpVariants} className="relative aspect-3/4 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
-                      <Image src="/images/abouthead-3.png" alt="About Image 3" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <motion.div 
+                      variants={fadeUpVariants} 
+                      whileHover={{ scale: 1.02 }} // 🟢 ขยายกล่องขึ้น 2% ตอนเอาเมาส์ชี้ (คอม)
+                      whileTap={{ scale: 0.95 }}   // 🟢 ยุบกล่องลง 5% ตอนใช้นิ้วจิ้ม (มือถือ)
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="relative aspect-3/4 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
+                    >
+                      <Image src="/images/abouthead-3.png" alt="About Image 3" fill className="object-cover transition-transform duration-500" />
                     </motion.div>
-                    <motion.div variants={fadeUpVariants} className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
-                      <Image src="/images/abouthead-5.png" alt="About Image 5" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <motion.div 
+                      variants={fadeUpVariants} 
+                      whileHover={{ scale: 1.02 }} 
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }} 
+                      className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
+                    >
+                      <Image src="/images/abouthead-5.png" alt="About Image 5" fill className="object-cover transition-transform duration-500" />
                     </motion.div>
                   </div>
                   
                   {/* Right Column (7/12 width) */}
                   <div className="col-span-7 space-y-3 md:space-y-4">
-                    <motion.div variants={fadeUpVariants} className="relative aspect-4/3 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
-                      <Image src="/images/abouthead-1.png" alt="About Image 1" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <motion.div 
+                      variants={fadeUpVariants} 
+                      whileHover={{ scale: 1.02 }} 
+                      whileTap={{ scale: 0.95 }} 
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="relative aspect-4/3 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
+                    >
+                      <Image src="/images/abouthead-1.png" alt="About Image 1" fill className="object-cover transition-transform duration-500" />
                     </motion.div>
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
-                      <motion.div variants={fadeUpVariants} className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group bg-white">
-                        <Image src="/images/abouthead-2.png" alt="About Image 2" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                      <motion.div 
+                        variants={fadeUpVariants} 
+                        whileHover={{ scale: 1.02 }} 
+                        whileTap={{ scale: 0.95 }} 
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 bg-white cursor-pointer"
+                      >
+                        <Image src="/images/abouthead-2.png" alt="About Image 2" fill className="object-cover transition-transform duration-500" />
                       </motion.div>
-                      <motion.div variants={fadeUpVariants} className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
-                        <Image src="/images/abouthead-4.png" alt="About Image 4" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                      <motion.div 
+                        variants={fadeUpVariants} 
+                        whileHover={{ scale: 1.02 }} 
+                        whileTap={{ scale: 0.95 }} 
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        className="relative aspect-square rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
+                      >
+                        <Image src="/images/abouthead-4.png" alt="About Image 4" fill className="object-cover transition-transform duration-500" />
                       </motion.div>
                     </div>
                     {/* Added Image 6 */}
-                    <motion.div variants={fadeUpVariants} className="relative aspect-4/3 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 group">
-                      <Image src="/images/abouthead-6.png" alt="About Image 6" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <motion.div 
+                      variants={fadeUpVariants} 
+                      whileHover={{ scale: 1.02 }} 
+                      whileTap={{ scale: 0.95 }} 
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      className="relative aspect-4/3 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg border border-slate-100 cursor-pointer"
+                    >
+                      <Image src="/images/abouthead-6.png" alt="About Image 6" fill className="object-cover transition-transform duration-500" />
                     </motion.div>
                   </div>
                 </div>
