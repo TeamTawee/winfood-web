@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X, MapPin, Phone, Mail, Clock, Facebook, Map, ShoppingBag } from "lucide-react";
+import { Menu, X, MapPin, Phone, Mail, Clock, Facebook, Map } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ClientLayout({ children }) {
@@ -130,47 +130,44 @@ function Footer() {
           </div>
         </div>
 
-        {/* 4. Follow Us & Shopee */}
+        {/* 4. Follow Us */}
         <div className="space-y-4 md:space-y-6">
           <h4 className="text-xs font-bold uppercase tracking-wider text-green-500">{t.footer.followTitle}</h4>
           
-          {/* Social Icons */}
+          {/* Social Icons (Facebook & Map) */}
           <div className="flex gap-4">
             <a 
-  href="https://www.facebook.com/profile.php?id=61588209103041" 
-  target="_blank" 
-  rel="noopener noreferrer" 
-  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#1877F2] transition-all"
->
-  <Facebook size={18} />
-</a>
+              href="https://www.facebook.com/profile.php?id=61588209103041" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#1877F2] transition-all"
+            >
+              <Facebook size={18} />
+            </a>
             <a 
-  href="https://lin.ee/xyqoDch" 
-  target="_blank" 
-  rel="noopener noreferrer" 
-  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#06C755] transition-all group text-white"
->
-  <span className="text-[10px] font-black tracking-tight group-hover:scale-110 transition-transform">
-    LINE
-  </span>
-</a>
-            <a href="https://maps.app.goo.gl/83yvBaikXtVsqVkT9" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-red-500 transition-all"><Map size={18} /></a>
+              href="https://maps.app.goo.gl/83yvBaikXtVsqVkT9" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-red-500 transition-all"
+            >
+              <Map size={18} />
+            </a>
           </div>
 
-          {/* Shopee Banner (เอาหัวข้อออก และปรับระยะห่าง) */}
+          {/* LINE OA Banner (ขนาดเท่า Shopee เดิม) */}
           <div className="pt-2 md:pt-4 border-t border-white/10 mt-2 md:mt-6">
             <a 
-              href="https://shopee.co.th/goodtasteofficial"  // 🟢 1. ใส่ลิงก์ตรงนี้
-              target="_blank"             // 🟢 2. เพิ่มบรรทัดนี้ เพื่อให้เปิดแท็บใหม่
-              rel="noopener noreferrer"   // 🟢 3. เพิ่มบรรทัดนี้ เพื่อความปลอดภัย
-              className="bg-[#EE4D2D] hover:bg-[#ff5535] text-white pl-3 pr-4 py-2 rounded-lg inline-flex items-center gap-3 transition-all shadow-lg hover:-translate-y-1 group w-full md:w-auto justify-center md:justify-start"
+              href="https://lin.ee/xyqoDch" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="bg-[#06C755] hover:bg-[#05b34c] text-white pl-3 pr-4 py-2 rounded-lg inline-flex items-center gap-3 transition-all shadow-lg hover:-translate-y-1 group w-full md:w-auto justify-center md:justify-start"
             >
-                <div className="bg-white/20 p-1.5 rounded-md group-hover:bg-white/30 transition-colors">
-                    <ShoppingBag size={18} className="text-white"/>
+                <div className="bg-white/20 p-1.5 rounded-md group-hover:bg-white/30 transition-colors w-7.5 h-7.5 flex items-center justify-center">
+                    <span className="text-[10px] font-black tracking-tight leading-none px-0.5 block text-white">LINE</span>
                 </div>
                 <div className="flex flex-col leading-none text-left">
-                    <span className="text-[8px] opacity-80 font-medium mb-0.5">Shop on</span>
-                    <span className="text-sm font-black tracking-wide">Shopee</span>
+                    <span className="text-[8px] opacity-80 font-medium mb-0.5">Chat with us</span>
+                    <span className="text-sm font-black tracking-wide">LINE OA</span>
                 </div>
             </a>
           </div>
