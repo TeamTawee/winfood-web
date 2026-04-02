@@ -3,7 +3,7 @@ import { AuthProvider } from "../context/AuthContext";
 import { LanguageProvider, useLanguage } from "../context/LanguageContext"; 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X, MapPin, Phone, Mail, Clock, Facebook, Map } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +11,26 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const isSpecialPage = pathname.startsWith("/admin") || pathname === "/login";
+
+  // --- ส่วนที่เพิ่มเพื่อส่งข้อมูล Meta Pixel และ CAPI ---
+  useEffect(() => {
+    // สร้าง ID เฉพาะป้องกันการนับยอดซ้ำ
+    const eventId = "event_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+
+    // 1. ส่งทาง Pixel (Browser)
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq('track', 'PageView', {}, { eventID: eventId });
+    }
+
+    // 2. ส่งทาง CAPI (Server) ผ่านไฟล์ api/capi/route.js ที่เราสร้างไว้
+    fetch("/api/capi", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ eventName: "PageView", eventId: eventId }),
+    }).catch(err => console.error("CAPI Error:", err));
+    
+  }, [pathname]); 
+  // ----------------------------------------------
 
   return (
     <AuthProvider>
