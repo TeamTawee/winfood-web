@@ -4,7 +4,7 @@ export const translations = {
     navbar: { home: "HOME", products: "PRODUCTS", about: "ABOUT US", contact: "CONTACT" },
     hero: {
       topTag: "AN INTERNATIONAL IMPORT AND EXPORT COMPANY",
-      description: "WIN Food Industry Corporation provides selected the best products from around the globe for local customer in South East Asia countries.",
+      description: "WIN Food Industry Corporation brings the best products from around the globe to customers throughout Southeast Asia.",
       button: "Explore Products"
     },
     aboutPreview: {
