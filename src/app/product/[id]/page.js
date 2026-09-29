@@ -166,66 +166,109 @@ export default function ProductDetail({ params }) {
       {/* FIXED MODAL POPUP */}
       <AnimatePresence>
         {selectedBlock && (
-            <div 
+            <motion.div 
+                key="product-modal"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
                 className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-8 bg-slate-900/60 backdrop-blur-sm"
                 onClick={() => setSelectedBlock(null)}
             >
                 <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }} 
-                    animate={{ opacity: 1, scale: 1 }} 
-                    exit={{ opacity: 0, scale: 0.95 }} 
-                    className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[2.5rem] shadow-2xl relative flex flex-col md:flex-row overflow-hidden"
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+                    animate={{ opacity: 1, scale: 1, y: 0 }} 
+                    exit={{ opacity: 0, scale: 0.95, y: 20 }} 
+                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                    // 1. 🟢 เปลี่ยนเป็น overflow-hidden เพื่อตัดขอบโค้งมนไม่ให้ Scrollbar ทะลุล้นออกไป
+                    className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[2.5rem] shadow-2xl relative flex flex-col overflow-hidden"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <button onClick={() => setSelectedBlock(null)} className="absolute top-4 right-4 z-20 p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 transition-colors"><X size={20}/></button>
-                    <div className="w-full md:w-5/12 bg-slate-50 p-8 flex flex-col items-center justify-center shrink-0 md:order-last min-h-62.5 md:min-h-full relative">
-                        <div className="relative w-40 h-40 md:w-64 md:h-64 bg-white rounded-full shadow-inner border border-slate-100 flex items-center justify-center overflow-hidden">
-                            {(selectedBlock.popupImage || selectedBlock.mediaSrc) ? (
-                                <div className="relative w-full h-full"> 
-                                    <Image src={selectedBlock.popupImage || selectedBlock.mediaSrc} alt="detail" fill className="object-cover"/>
-                                </div>
-                            ) : (<PackageOpen size={40} className="text-slate-300"/>)}
-                        </div>
+                    {/* ปุ่มปิด (ให้ลอยอยู่เหนือพื้นที่ Scroll) */}
+                    <button onClick={() => setSelectedBlock(null)} className="absolute top-4 right-4 md:top-6 md:right-6 z-30 p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 transition-colors"><X size={20}/></button>
+                    
+                    {/* 2. 🟢 ย้าย overflow-y-auto มาไว้ในกล่องนี้แทน แถบเลื่อนจะอยู่ข้างในอย่างสวยงาม ไม่ล้นขอบ */}
+                    <div className="overflow-y-auto w-full h-full p-6 md:p-10 flex flex-col gap-8 md:gap-10">
                         
-                        {/* ข้อความประกอบภาพโฆษณา (ใต้รูปภาพใน Popup) */}
-                        <span className="text-[10px] text-slate-400 italic font-light mt-6 tracking-wide">
-                            {t?.productPage?.adImageDisclaimer}
-                        </span>
-                    </div>
-                    <div className="w-full md:w-7/12 p-8 md:p-12 overflow-y-auto bg-white flex-1">
-                        <div className="mb-6">
-                            <h2 className="text-2xl md:text-3xl font-black text-cyan-600 uppercase leading-tight mb-2">{selectedBlock.heading}</h2>
-                            {selectedBlock.content && <p className="text-slate-500 text-sm mt-4 whitespace-pre-wrap">{selectedBlock.content}</p>}
+                        {/* ส่วนบนสุด: รูปภาพ + ชื่อ + รายละเอียด (จัดเรียงแนวนอน) */}
+                        <div className="flex flex-col md:flex-row gap-6 md:gap-10 items-center md:items-start">
+                            
+                            {/* ฝั่งซ้าย: รูปภาพ */}
+                            <div className="w-full md:w-5/12 flex flex-col items-center pt-2 shrink-0">
+                                {/* 3. 🟢 บังคับขนาดเป็น 1:1 เป๊ะๆ (w-48 h-48 หรือ md:w-64 md:h-64) และใส่ shrink-0 ป้องกันไม่ให้กลายเป็นวงรี */}
+                                <div className="relative w-48 h-48 md:w-64 md:h-64 shrink-0 bg-slate-50 rounded-full shadow-inner border border-slate-100 flex items-center justify-center overflow-hidden">
+                                    {(selectedBlock.popupImage || selectedBlock.mediaSrc) ? (
+                                        <div className="relative w-full h-full"> 
+                                            {/* object-cover จะทำให้ภาพเต็มวงกลมพอดีเป๊ะ */}
+                                            <Image src={selectedBlock.popupImage || selectedBlock.mediaSrc} alt="detail" fill className="object-cover hover:scale-110 transition-transform duration-500"/>
+                                        </div>
+                                    ) : (<PackageOpen size={40} className="text-slate-300"/>)}
+                                </div>
+                                <span className="block text-[10px] text-slate-400 italic font-light mt-4 tracking-wide text-center">
+                                    {t?.productPage?.adImageDisclaimer || "*Images are for advertising purposes only."}
+                                </span>
+                            </div>
+
+                            {/* ฝั่งขวา: ชื่อสินค้า และ รายละเอียด */}
+                            <div className="w-full md:w-7/12 flex flex-col justify-center pt-2 md:pt-4">
+                                <h2 className="text-3xl md:text-4xl font-black text-cyan-600 uppercase leading-tight mb-4">{selectedBlock.heading}</h2>
+                                {selectedBlock.content && (
+                                    <div className="text-slate-600 text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+                                        {selectedBlock.content}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                        <div className="space-y-6">
+
+                        {/* ส่วนล่าง: วิธีใช้งาน และ รายละเอียดเชิงลึก */}
+                        <div className="grid grid-cols-1 gap-6">
+                            
+                            {/* วิธีใช้งาน (How to Use) */}
+                            {selectedBlock.howToUse && (
+                                <div className="bg-green-50/70 border border-green-100 p-6 md:p-8 rounded-[2rem]">
+                                    <p className="text-green-800 font-bold text-sm uppercase tracking-widest mb-4 flex items-center gap-2">
+                                        <Info size={18} className="text-green-600"/> วิธีใช้งาน (How to Use)
+                                    </p>
+                                    <div className="text-sm md:text-base text-slate-700 leading-relaxed whitespace-pre-wrap">
+                                        {selectedBlock.howToUse}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* คุณสมบัติ (Attributes) */}
                             {selectedBlock.attributes?.length > 0 && (
-                                <div className="space-y-3">
-                                    <p className="text-slate-700 font-bold text-xs flex items-center gap-2 uppercase tracking-wider mb-2">
-    <Info size={14}/> {t?.productPage?.attributesTitle || "Detail"}
-</p>
-                                    <div className="space-y-2">
+                                <div className="space-y-4">
+                                    <p className="text-slate-700 font-bold text-sm flex items-center gap-2 uppercase tracking-wider mb-2">
+                                        <Info size={16}/> {t?.productPage?.attributesTitle || "Detail"}
+                                    </p>
+                                    <div className="space-y-3 bg-slate-50 p-6 md:p-8 rounded-[2rem] border border-slate-100">
                                         {selectedBlock.attributes.map((attr, idx) => (
-                                            <div key={idx} className="flex justify-between items-end text-sm pb-1 border-b border-slate-50">
+                                            <div key={idx} className="flex justify-between items-end text-sm md:text-base pb-3 border-b border-slate-200/60 last:border-0 last:pb-0">
                                                 <span className="text-slate-500">{attr.key}</span>
-                                                <div className="flex-1 border-b border-dotted border-slate-200 mx-2 mb-1"></div>
-                                                <span className="font-bold text-slate-800">{attr.value}</span>
+                                                <div className="flex-1 border-b border-dotted border-slate-300 mx-3 md:mx-4 mb-2 opacity-50"></div>
+                                                <span className="font-bold text-slate-800 text-right">{attr.value}</span>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             )}
+
+                            {/* Storage & FDA */}
                             {(selectedBlock.storage || selectedBlock.fda) && (
-                                <div className="pt-6 border-t border-slate-100 space-y-4 text-xs text-slate-500 font-medium">
+                                <div className="p-6 md:p-8 bg-slate-50 rounded-[2rem] border border-slate-100 space-y-4 text-sm text-slate-600 font-medium">
                                     {selectedBlock.storage && (
-    <p className="whitespace-pre-wrap">Storage: <span className="text-slate-800">{selectedBlock.storage}</span></p>
-)}
-                                    {selectedBlock.fda && (<p className="font-bold text-slate-800 uppercase tracking-wide">FDA Number: <span className="font-mono font-normal text-slate-600 ml-1">{selectedBlock.fda}</span></p>)}
+                                        <p className="whitespace-pre-wrap leading-relaxed"><span className="font-bold text-slate-800">Storage:</span> {selectedBlock.storage}</p>
+                                    )}
+                                    {selectedBlock.fda && (
+                                        <p className="tracking-wide"><span className="font-bold text-slate-800 uppercase">FDA Number:</span> <span className="font-mono font-normal text-slate-600 ml-1">{selectedBlock.fda}</span></p>
+                                    )}
                                 </div>
                             )}
                         </div>
+
                     </div>
                 </motion.div>
-            </div>
+            </motion.div>
         )}
       </AnimatePresence>
     </div>
@@ -241,38 +284,23 @@ function BlockRenderer({ blocks, onSelect }) {
     
     processedBlocks.forEach((block, index) => {
         if (block.type === 'separator') {
-            // Render Product Group ก่อนหน้า
             if (currentProductGroup.length > 0) {
                 renderedGroups.push(<ProductGrid key={`grid-${index}`} items={currentProductGroup} onSelect={onSelect} />);
                 currentProductGroup = [];
             }
-            // Render Separator (Text + Image)
             renderedGroups.push(
                 <div key={`sep-${index}`} className="w-full py-16 flex items-center justify-center gap-6">
                     <div className="h-px bg-slate-200 flex-1"></div>
-                    
                     <div className="flex flex-col items-center gap-3">
-                        {/* ✅ แสดงรูปโลโก้ ถ้ามี */}
                         {block.separatorImage && (
                             <div className="relative w-16 h-16 md:w-20 md:h-20 shrink-0">
-                                <Image 
-                                    src={block.separatorImage} 
-                                    alt="Separator Logo" 
-                                    fill 
-                                    className="object-contain" 
-                                />
+                                <Image src={block.separatorImage} alt="Separator Logo" fill className="object-contain" />
                             </div>
                         )}
-                        
-                        {/* แสดงข้อความ ถ้ามี */}
                         {block.content && (
-                            <div 
-                                className={`uppercase tracking-tight ${block.textColor || 'text-slate-800'} ${block.fontWeight || 'font-black'} text-xl md:text-2xl text-center`} 
-                                dangerouslySetInnerHTML={{__html: block.content}}
-                            ></div>
+                            <div className={`uppercase tracking-tight ${block.textColor || 'text-slate-800'} ${block.fontWeight || 'font-black'} text-xl md:text-2xl text-center`} dangerouslySetInnerHTML={{__html: block.content}}></div>
                         )}
                     </div>
-
                     <div className="h-px bg-slate-200 flex-1"></div>
                 </div>
             );
@@ -281,7 +309,6 @@ function BlockRenderer({ blocks, onSelect }) {
         }
     });
     
-    // Render Product Group ที่เหลือ
     if (currentProductGroup.length > 0) { 
         renderedGroups.push(<ProductGrid key={`grid-last`} items={currentProductGroup} onSelect={onSelect} />); 
     }
@@ -291,16 +318,64 @@ function BlockRenderer({ blocks, onSelect }) {
 
 function ProductGrid({ items, onSelect }) {
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {items.map((block, i) => (
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} key={i} className={`group cursor-pointer flex flex-col items-center text-center gap-4`} onClick={() => onSelect(block)}>
-    <div className="relative w-full aspect-square bg-transparent rounded-2xl overflow-visible transition-transform duration-500 group-hover:-translate-y-2">
-        {block.status === 'out_of_stock' ? (<div className="absolute top-0 right-0 z-10 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg shadow-sm">MADE TO ORDER</div>) : block.isBestSeller ? (<div className="absolute top-0 right-0 z-10 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg shadow-sm">BEST SELLER</div>) : null}
-                        {block.mediaSrc ? (<Image src={block.mediaSrc} alt={block.heading} fill className="object-contain drop-shadow-xl" sizes="(max-width: 768px) 50vw, 25vw"/>) : (<div className="w-full h-full bg-slate-50 rounded-2xl flex flex-col items-center justify-center text-slate-300 gap-2"><PackageOpen size={32}/><span className="text-[10px] font-bold uppercase tracking-widest">No Image</span></div>)}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    key={i}
+                    className="group cursor-pointer bg-white rounded-[2rem] p-5 pb-0 flex flex-col justify-between overflow-visible border border-slate-100 shadow-sm hover:shadow-xl hover:z-50 transition-all duration-500 relative min-h-[420px]"
+                    onClick={() => onSelect(block)}
+                >
+                    <div className="z-10 text-left pt-2 px-2">
+                        <div className="flex gap-2 mb-3">
+                            {block.status === 'out_of_stock' && (
+                                <span className="bg-orange-50 text-orange-600 text-[10px] font-bold px-3 py-1 rounded-full">
+                                    MADE TO ORDER
+                                </span>
+                            )}
+                            {block.isBestSeller && (
+                                <span className="bg-red-50 text-red-600 text-[10px] font-bold px-3 py-1 rounded-full">
+                                    BEST SELLER
+                                </span>
+                            )}
+                        </div>
+
+                        <h3 className="text-base md:text-lg font-semibold text-slate-900 leading-snug group-hover:text-green-600 transition-colors line-clamp-2 pr-2">
+                            {block.heading}
+                        </h3>
+
+                        {block.shortDesc && (
+                            <p className="text-sm text-slate-500 mt-2 line-clamp-2">
+                                {block.shortDesc}
+                            </p>
+                        )}
                     </div>
-                    <div className="space-y-1 px-2">
-                        <h3 className="text-sm md:text-base font-bold text-slate-800 leading-tight group-hover:text-green-600 transition-colors">{block.heading}</h3>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">View Detail <ChevronRight size={10}/></p>
+
+                    {/* ใช้ CSS ล้วนๆ ตัด State ทิ้งเพื่อไม่ให้ React Re-render (ลดอาการกระตุก) ปรับ Scale ให้นุ่มนวลขึ้น */}
+                    <div className="relative w-[110%] -ml-[5%] h-56 md:h-[18rem] mt-auto mb-4 transform transition-transform duration-500 ease-out z-10 origin-bottom group-hover:scale-110 group-hover:-translate-y-4">
+                        {block.mediaSrc ? (
+                            <Image
+                                src={block.mediaSrc}
+                                alt={block.heading}
+                                fill
+                                className="object-contain object-bottom drop-shadow-2xl"
+                                sizes="(max-width: 768px) 100vw, 33vw"
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-slate-50 rounded-t-2xl flex flex-col items-center justify-center text-slate-300 gap-2">
+                                <PackageOpen size={32} />
+                                <span className="text-[10px] font-bold uppercase tracking-widest">No Image</span>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="absolute bottom-5 right-5 w-8 h-8 bg-slate-100 group-hover:bg-green-500 group-hover:text-white rounded-full flex items-center justify-center text-slate-500 transition-colors z-20 shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M5 12h14" /><path d="M12 5v14" />
+                        </svg>
                     </div>
                 </motion.div>
             ))}

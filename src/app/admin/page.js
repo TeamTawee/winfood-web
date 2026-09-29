@@ -250,6 +250,7 @@ export default function AdminPage() {
     layout: block.layout || 'left', 
     heading: block.heading || "", 
     content: block.content || "", 
+    howToUse: block.howToUse || "", // 🟢 เพิ่มฟิลด์วิธีใช้งาน
     mediaSrc: block.mediaSrc || "",
     popupImage: block.popupImage || "",
     textColor: block.textColor || 'text-slate-500',
@@ -257,7 +258,6 @@ export default function AdminPage() {
     attributes: block.attributes || [], 
     fda: block.fda || "", 
     storage: block.storage || "",
-    // 🟢 เพิ่มฟิลด์รูปโลโก้สำหรับเส้นคั่น
     separatorImage: block.separatorImage || "" 
   });
 
@@ -713,9 +713,15 @@ export default function AdminPage() {
                                                             />
                                                         </div>
 
-                                                        <div className="space-y-1">
-                                                            <label className="text-[10px] font-bold text-slate-400 uppercase">รายละเอียดสินค้า</label>
-                                                            <textarea value={block.content} onChange={e => updateBlock(index, 'content', e.target.value)} rows={3} className="w-full p-3 bg-slate-50 rounded-xl text-sm border-none outline-none resize-none focus:ring-2 focus:ring-green-500" placeholder="ใส่รายละเอียด..."/>
+                                                        <div className="space-y-4">
+                                                            <div className="space-y-1">
+                                                                <label className="text-[10px] font-bold text-slate-400 uppercase">รายละเอียดสินค้า (รองรับการขึ้นบรรทัดใหม่)</label>
+                                                                <textarea value={block.content} onChange={e => updateBlock(index, 'content', e.target.value)} rows={4} className="w-full p-3 bg-slate-50 rounded-xl text-sm border-none outline-none resize-none focus:ring-2 focus:ring-green-500" placeholder="ใส่รายละเอียดสินค้า..."/>
+                                                            </div>
+                                                            <div className="space-y-1">
+                                                                <label className="text-[10px] font-bold text-slate-400 uppercase">วิธีใช้งาน / How to use (รองรับการขึ้นบรรทัดใหม่)</label>
+                                                                <textarea value={block.howToUse || ""} onChange={e => updateBlock(index, 'howToUse', e.target.value)} rows={4} className="w-full p-3 bg-slate-50 rounded-xl text-sm border-none outline-none resize-none focus:ring-2 focus:ring-green-500" placeholder="อธิบายวิธีชง หรือ วิธีการใช้งาน..."/>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div className="bg-green-50/50 p-5 rounded-2xl border border-green-100 space-y-4">
